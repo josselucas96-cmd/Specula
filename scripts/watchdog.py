@@ -5,8 +5,9 @@ the watcher: the cron had been switched off by GitHub and the site kept saying
 "Last updated <today>". This script runs on its own schedule and FAILS LOUDLY
 (non-zero exit => red run => GitHub e-mails the repo owner) when:
 
-  1. any portfolio is missing yesterday's daily_holdings row
-     (the cron writes 7/7, so by 06:40 UTC yesterday must be there);
+  1. any portfolio is more than one session behind in daily_holdings
+     (the cron writes 7/7; yesterday may legitimately still be missing, see
+     check_holdings);
   2. current_prices has not been refreshed in the last 36 hours;
   2b. the newest ledger row carries another session's closes (2026-09-21/22);
   3. the daily-refresh workflow is not `active` (GitHub disables scheduled
@@ -34,15 +35,23 @@ problems, notes, alerts = [], [], []
 DRAWDOWN_THRESHOLDS = {"default": (-5.0, -15.0), "nakamoto": (-10.0, -30.0)}   # (1-day move, drawdown from peak)
 
 
-def check_holdings(sb):
-    yesterday = (datetime.now(timezone.utc).date() - timedelta(days=1)).isoformat()
+def check_holdings(sb, today=None):
+    """The evening run usually finds the day's close not yet published and
+    leaves that day to the morning pass, which GitHub starts in the afternoon
+    UTC, after this check. So one missing session is the normal state at check
+    time; two mean the pipeline has stalled."""
+    today = today or datetime.now(timezone.utc).date()
+    yesterday = (today - timedelta(days=1)).isoformat()
+    floor = (today - timedelta(days=2)).isoformat()
     pids = [r["id"] for r in sb.table("portfolios").select("id").execute().data]
     for pid in pids:
         last = sb.table("daily_holdings").select("date").eq("portfolio_id", pid) \
                  .order("date", desc=True).limit(1).execute().data
         last_date = last[0]["date"] if last else None
-        if last_date is None or last_date < yesterday:
-            problems.append(f"daily_holdings: {pid} last row = {last_date}, expected >= {yesterday}")
+        if last_date is None or last_date < floor:
+            problems.append(f"daily_holdings: {pid} last row = {last_date}, expected >= {floor}")
+        elif last_date < yesterday:
+            notes.append(f"{pid}: last row {last_date}, {yesterday} left to the morning pass")
         else:
             notes.append(f"{pid}: last row {last_date}")
 
