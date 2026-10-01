@@ -1,12 +1,32 @@
 portfolio_id,date,executed_at,action,ticker_in,ticker_out,weight_in,weight_out,price_in,price_out,entry_price_out,reason
+batisseur,2026-06-04,2026-06-04T13:35:00+00:00,IN,NOW,,1.9692,,121.41,,,New position
 batisseur,2026-06-04,2026-06-04T13:35:00+00:00,IN,MA,,1.9692,,477.67,,,New position
 batisseur,2026-06-04,2026-06-04T13:35:00+00:00,IN,AVGO,,2.9537,,411.73,,,New position
-batisseur,2026-06-04,2026-06-04T13:35:00+00:00,IN,NOW,,1.9692,,121.41,,,New position
 batisseur,2026-06-04,2026-06-04T13:38:41.753493+00:00,OUT,,RACE,,2.0,,349.91,325.44,Move from cockpit
 batisseur,2026-06-10,2026-06-10T16:41:00+00:00,OUT,,VICI,,2.0,,28.45,28.27,Move from cockpit
 batisseur,2026-06-10,2026-06-10T16:41:00+00:00,IN,CSGP,,1.977822,,34.63,,,New position
 batisseur,2026-06-12,2026-06-12T15:45:00+00:00,IN,NOW,,0.795047050058207,,98.8,,,Reinforced 0.795047050058207% (new PRU: 113.9104)
+batisseur,2026-10-01,2026-10-01T13:40:12.598705+00:00,OUT,,ULTA,,3.0,,545.93,532.53,Closed. Proceeds reallocated.
+batisseur,2026-10-01,2026-10-01T13:40:13.206535+00:00,OUT,,WM,,3.0,,203.15,224.49,Closed. Proceeds reallocated.
+batisseur,2026-10-01,2026-10-01T13:40:13.60416+00:00,OUT,,IBE.MC,,2.0,,23.4677,23.1094,Closed. Replaced by Vistra in the utilities sector.
+batisseur,2026-10-01,2026-10-01T13:40:14.137827+00:00,IN,VST,,2.9796,,141.27,,,"New position, 3% of the portfolio. Replaces Iberdrola."
+batisseur,2026-10-01,2026-10-01T13:40:14.634459+00:00,IN,FICO,,2.1678,,641.51,,,Reinforced to 4% of the portfolio.
+batisseur,2026-10-01,2026-10-01T13:40:15.12588+00:00,IN,AVGO,,1.4419,,352.79,,,Reinforced to 4% of the portfolio.
 nakamoto,2026-09-08,2026-09-19T13:04:39.777548+00:00,SPLIT,ALCPB.PA,,,,7.652,,,"0.1-for-1 split (1:10 reverse split, 2026-09-08): shares x 0.1, PRU / 0.1. Applied 2026-09-19 (recovery)."
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,BSX,,4.0,,95.35,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,META,,6.0,,660.09,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,AMZN,,6.0,,230.82,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,WM,,3.0,,219.71,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,VRSK,,3.0,,223.69,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,VICI,,2.0,,28.12,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,V,,4.0,,350.71,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,ULTA,,3.0,,605.01,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,EL.PA,,3.0,,269.9,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,ZM,,2.0,,86.29,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,DPZ,,2.0,,416.82,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,CSU.TO,,7.0,,3301.3999,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,BABA,,4.0,,146.58,,,New position (Portfolio_Test re-inception 2026-01-01)
+test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,CRCL,,2.0,,79.3,,,New position (Portfolio_Test re-inception 2026-01-01)
 test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,STZ,,2.0,,137.96,,,New position (Portfolio_Test re-inception 2026-01-01)
 test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,RMS.PA,,2.0,,2122.0,,,New position (Portfolio_Test re-inception 2026-01-01)
 test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,RACE,,2.0,,369.56,,,New position (Portfolio_Test re-inception 2026-01-01)
@@ -19,20 +39,6 @@ test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,JPM,,4.5,,322.22,,,New posit
 test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,ISRG,,3.0,,566.36,,,New position (Portfolio_Test re-inception 2026-01-01)
 test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,IBE.MC,,2.0,,18.465,,,New position (Portfolio_Test re-inception 2026-01-01)
 test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,FICO,,3.0,,1690.62,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,EL.PA,,3.0,,269.9,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,ZM,,2.0,,86.29,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,DPZ,,2.0,,416.82,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,CSU.TO,,7.0,,3301.3999,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,CRCL,,2.0,,79.3,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,BABA,,4.0,,146.58,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,BSX,,4.0,,95.35,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,META,,6.0,,660.09,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,AMZN,,6.0,,230.82,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,WM,,3.0,,219.71,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,VRSK,,3.0,,223.69,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,VICI,,2.0,,28.12,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,V,,4.0,,350.71,,,New position (Portfolio_Test re-inception 2026-01-01)
-test,2026-01-01,2026-05-17T06:46:17.999217+00:00,IN,ULTA,,3.0,,605.01,,,New position (Portfolio_Test re-inception 2026-01-01)
 test,2026-05-17,2026-05-17T11:27:41.489043+00:00,OUT,,FICO,,3.0,,1098.59,1690.62,Move from cockpit
 test,2026-05-17,2026-05-17T11:27:42.924181+00:00,IN,MELI,,2.7395525307130386,,1546.81,,,Reinforced 2.7395525307130386% (new PRU: 1819.6267)
 test,2026-05-17,2026-05-17T11:27:44.015703+00:00,TRIM,,NVDA,,3.900459865819462,,225.32,186.5,Move from cockpit
@@ -42,13 +48,7 @@ test,2026-05-17,2026-05-17T12:00:16.942597+00:00,OUT,,VRSK,,3.0,,162.55,223.69,M
 test,2026-05-17,2026-05-17T12:00:18.259574+00:00,IN,MSTR,,3.6899734491259006,,177.42,,,New position
 test,2026-05-27,2026-05-27T12:30:00+00:00,IN,0700.HK,,2.748789,,434.4,,,New position
 test,2026-05-27,2026-05-27T12:30:00+00:00,OUT,,VICI,,2.0,,28.62,28.12,Move from cockpit
-visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,CELH,,10,,34.23,,,Initial position at launch (US open)
-visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,META,,10,,629.5,,,Initial position at launch (US open)
-visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,TSLA,,12,,350.07,,,Initial position at launch (US open)
-visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,NVDA,,12,,186.03,,,Initial position at launch (US open)
 visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,XPEV,,1,,17.28,,,Initial position at launch (US open)
-visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,LFMD,,1,,3.43,,,Initial position at launch (US open)
-visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,SMR,,1,,9.06,,,Initial position at launch (US open)
 visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,DUOL,,2,,90.14,,,Initial position at launch (US open)
 visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,CRSP,,2,,51.09,,,Initial position at launch (US open)
 visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,BMNR,,2,,20.98,,,Initial position at launch (US open)
@@ -58,11 +58,17 @@ visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,MTPLF,,5,,2.15,,,Initial pos
 visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,NBIS,,5,,142.7,,,Initial position at launch (US open)
 visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,HIMS,,8,,19.33,,,Initial position at launch (US open)
 visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,AMZN,,8,,237.45,,,Initial position at launch (US open)
-visionnaire,2026-05-14,2026-05-14T15:09:00+00:00,TRIM,,RKLB,,1.9710941870111376,,127.28,67.05,"Reduce Tesla (Xpeng ? NIO ?), RocketLab (ASTS ?), AMD. Renfo Hims, Celsius"
+visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,CELH,,10,,34.23,,,Initial position at launch (US open)
+visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,META,,10,,629.5,,,Initial position at launch (US open)
+visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,TSLA,,12,,350.07,,,Initial position at launch (US open)
+visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,NVDA,,12,,186.03,,,Initial position at launch (US open)
+visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,SMR,,1,,9.06,,,Initial position at launch (US open)
+visionnaire,2026-04-13,2026-04-13T13:30:00+00:00,IN,LFMD,,1,,3.43,,,Initial position at launch (US open)
+visionnaire,2026-05-14,2026-05-14T15:09:00+00:00,TRIM,,AMD,,1.8556466759550863,,449.46,245.03,"Reduce Tesla (Xpeng ? NIO ?), RocketLab (ASTS ?), AMD. Renfo Hims, Celsius"
 visionnaire,2026-05-14,2026-05-14T15:09:00+00:00,TRIM,,TSLA,,2.8981951949165143,,444.86,350.07,"Reduce Tesla (Xpeng ? NIO ?), RocketLab (ASTS ?), AMD. Renfo Hims, Celsius"
+visionnaire,2026-05-14,2026-05-14T15:09:00+00:00,TRIM,,RKLB,,1.9710941870111376,,127.28,67.05,"Reduce Tesla (Xpeng ? NIO ?), RocketLab (ASTS ?), AMD. Renfo Hims, Celsius"
 visionnaire,2026-05-14,2026-05-14T15:09:00+00:00,IN,HIMS,,1.2707387179387268,,24.11,,,Added 1.2707387179387268% to existing position (new PRU: 19.9852)
 visionnaire,2026-05-14,2026-05-14T15:09:00+00:00,IN,CELH,,3.5243435647777606,,29.52,,,Added 3.5243435647777606% to existing position (new PRU: 33.0026)
-visionnaire,2026-05-14,2026-05-14T15:09:00+00:00,TRIM,,AMD,,1.8556466759550863,,449.46,245.03,"Reduce Tesla (Xpeng ? NIO ?), RocketLab (ASTS ?), AMD. Renfo Hims, Celsius"
 visionnaire,2026-05-26,2026-05-26T15:17:31.76228+00:00,IN,NIO,,1.178074,,5.28,,,New position
 visionnaire,2026-05-26,2026-05-26T15:17:32.99105+00:00,IN,NU,,4.712296,,12.85,,,New position
 visionnaire,2026-05-26,2026-05-26T15:17:34.180117+00:00,IN,SMCI,,1.178074,,36.15,,,New position
