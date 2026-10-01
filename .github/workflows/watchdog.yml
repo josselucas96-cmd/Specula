@@ -29,7 +29,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --quiet --upgrade pip
-          pip install --quiet supabase
+          # pandas + yfinance: check_ledger_is_priced_on_its_own_day. Without
+          # them every run crashed from 2026-09-23 to 10-01 and no check ran.
+          pip install --quiet "supabase>=2.4.0,<3.0" "yfinance>=0.2.40,<1.0" "pandas>=2.0.0,<3.0"
 
       - name: Run health checks
         env:
