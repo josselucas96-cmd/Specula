@@ -23,6 +23,16 @@ from pathlib import Path
 
 import streamlit as st
 from supabase import create_client
+from supabase.lib.client_options import SyncClientOptions
+
+from utils.sb_http import make_http_client
+
+
+def new_client(key: str):
+    """Supabase client over the hardened HTTP layer of utils/sb_http.py
+    (survives a connection dropped while idle; see the 2026-10-09 traceback)."""
+    return create_client(st.secrets["supabase_url"], key,
+                         options=SyncClientOptions(httpx_client=make_http_client()))
 
 
 @st.cache_resource
@@ -33,7 +43,7 @@ def get_client():
     can only read, and every write of the cockpit needs this key. The key never
     reaches the browser — Streamlit renders server-side."""
     key = st.secrets.get("supabase_service_key") or st.secrets["supabase_key"]
-    return create_client(st.secrets["supabase_url"], key)
+    return new_client(key)
 
 
 # ── Internal helpers ──────────────────────────────────────────────────────────
