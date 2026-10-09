@@ -4,13 +4,22 @@
 #         impact (what changed in published figures), status.
 
 [[entry]]
+date   = "2026-09-25"
+scope  = "All portfolios"
+title  = "No ledger rows written on 23 and 24 September"
+what   = "The safeguard added on 23 September, which refuses to write a trading day whose closing prices are not yet published, stopped the whole nightly job instead of skipping only that day. The job starts around 00:20 UTC and the data provider was publishing later than that, so the job stopped every night before filling the previous days, while reporting success. The site showed data as of 22 September for two days. The morning check flagged the missing rows on 23 and 24 September."
+fix    = "An unpublished day is now skipped on its own and earlier days are still filled and checked. A second daily pass at 09:30 UTC writes the previous day once its closes are out. The rows for 23 and 24 September were written on 25 September from their own closing prices. Covered by regression tests."
+impact = "No figure was wrong; the site was two days behind. Moves executed on 23 September appear from that date as intended."
+status = "closed"
+
+[[entry]]
 date   = "2026-09-23"
 scope  = "All portfolios"
 title  = "Ledger a full session behind on 21 and 22 September"
 what   = "The data provider published its daily closing bars several hours later than usual (intraday prices were available, the daily bar was not). The nightly job, which GitHub had drifted to just after midnight UTC, found no close for its target day and carried the previous session forward — the behaviour that is correct for a weekend, wrong for a trading day. The row dated 21 September carries the closes of 18 September, and the row dated 22 September carries those of 21 September. Figures shown on 22 and 23 September are correct for one session earlier, and understate the portfolios by roughly 3-4%."
-fix    = "The job now tells the two cases apart: a weekday whose close is not yet published leaves the day unwritten (a visible gap) instead of stamping stale prices on a real session. Filling holes was not enough either — a row written wrong exists, so nothing ever re-read it — so each run now also re-prices the last three sessions against their own closes and rewrites what does not match. The morning watchdog performs the same check independently and fails the run if it finds a mismatch. The 21 September row has been rebuilt with its own closes; 22 September was still unpublished at the time of writing and is rewritten automatically once it is."
+fix    = "The job now tells the two cases apart: a weekday whose close is not yet published leaves the day unwritten (a visible gap) instead of stamping stale prices on a real session. Filling holes was not enough either — a row written wrong exists, so nothing ever re-read it — so each run now also re-prices the last three sessions against their own closes and rewrites what does not match. The morning watchdog performs the same check independently and fails the run if it finds a mismatch. The 21 September row was rebuilt with its own closes on 23 September and the 22 September row on 24 September, once the provider had published them."
 impact = "No trade, share count or cash balance is affected; only the closing prices of two days. Corrected inception-to-date returns at 21 September: Le Visionnaire +25.10% (shown +20.33%), Le Bâtisseur +1.36% (shown -0.07%), Le Nakamoto +11.74% (shown +5.76%). Sharpe of Le Visionnaire 1.29 -> 1.54; max drawdown unchanged."
-status = "open"
+status = "closed"
 
 [[entry]]
 date   = "2026-09-23"

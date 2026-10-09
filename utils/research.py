@@ -1,14 +1,12 @@
 import streamlit as st
-from supabase import create_client
-from utils.data import get_client
+from utils.data import get_client, new_client
 
 
 @st.cache_resource
 def _get_admin_client():
     """Service role client — bypasses RLS for admin writes."""
-    url = st.secrets["supabase_url"]
     key = st.secrets.get("supabase_service_key") or st.secrets["supabase_key"]
-    return create_client(url, key)
+    return new_client(key)
 
 
 @st.cache_data(ttl=300)
