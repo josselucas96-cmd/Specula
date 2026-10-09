@@ -1,0 +1,11 @@
+market_comment = [
+  "Bitcoin rose 6.4% in September, to about $83,550. It fell to about $75,000 on 15 September, when the US Senate rejected the CLARITY Act on crypto market structure by 49 votes to 50, and the Federal Reserve raised rates the following day. It then rose above $87,000 on 21 September as oil prices eased and equities rallied.",
+  "It was the first positive September following a positive August since 2013, and the third quarter, up 42.7%, was bitcoin's best since the first quarter of 2024. Strategy bought 2,615 bitcoin during the month, ending it with 847,666, and bought back about $744 million of its STRC preferred shares.",
+]
+
+mgmt_comment = [
+  "Le Nakamoto returned {pf_mtd_pct}% in September against {bench_mtd_pct}% for {bench_pri_lbl}, a difference of {alpha_mtd_pct} percentage points. The portfolio holds no cash.",
+  "No transactions were made during the month.",
+  "Strive rose 21% and added 3.6 points against bitcoin. It bought about 4,300 bitcoin during the month, financed mainly by its SATA preferred shares and by warrant exercises, and ended September with 27,462. The Smarter Web Company doubled after announcing on 11 September a sterling preferred share to be listed in London, adding 2.6 points, Strategy rose 15%, adding 1.8 points, and H100 rose 27%.",
+  "Metaplanet fell 9.5% and cost 3.4 points. On 6 September its chief executive published a statement on the expansion of the executive stock option pool, and the shares fell about 17% over the next two sessions. The 41% reduction of the pool announced a few days later did not reverse the move. Since inception the portfolio has returned 6.47%, against 4.20% for bitcoin over the same period.",
+]

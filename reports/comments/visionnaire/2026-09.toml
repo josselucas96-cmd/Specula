@@ -1,0 +1,12 @@
+market_comment = [
+  "US equities diverged in September. The Nasdaq 100 rose about 3% and set a record close on 22 September, while the S&P 500 was little changed, the Dow fell 4.3% and the Russell 2000 5.4%. Technology and communication services were the only sectors of the S&P 500 to rise.",
+  "The Federal Reserve raised its policy rate by 0.25 point to 3.75-4.00% on 16 September, its first increase since July 2023, citing inflation that remains elevated. Brent crude rose about 14% over the month, to $103.5, as shipping through the Strait of Hormuz remained disrupted, and the 10-year Treasury yield rose from 4.75% to 5.29%, its largest monthly increase since September 2022.",
+  "AI-related stocks fell on 14 September after the heads of Anthropic, OpenAI and xAI warned publicly about the risks of the technology, and recovered from 21 September, when Meta's new AI agent reached the top of the US app rankings. Bitcoin rose 6.4%, after a low on 15 September when the Senate rejected the CLARITY Act on crypto market structure.",
+]
+
+mgmt_comment = [
+  "Le Visionnaire returned {pf_mtd_pct}% in September against {bench_mtd_pct}% for the {bench_pri_lbl}, a difference of {alpha_mtd_pct} percentage points. Cash at month-end was {cash_pct}%.",
+  "On 23 September Rocket Lab was sold, with a total gain of 40.7% since entry including the partial sale in May. AMD was reduced, Broadcom was opened and the Metaplanet position was increased.",
+  "Meta rose 27% after the launch on 8 September of Muse, its personal AI agent, which reached first place among free apps in the US, and an upgrade by JPMorgan. The position added 1.8 points against the index. AMD rose 30% and added 1.3 points, its market value passing $1 trillion on 21 September, and Nebius rose 14% after a partnership with Palantir and the price increases it announced to customers on 17 September.",
+  "Celsius fell 13% and cost 1.8 points. At a conference on 8 September, management said that retail sales data for the Celsius brand were down 5 to 10% and that the recovery of its gross margin could take longer than expected. Nu (-13%) and SoFi (-12%) fell with financial stocks as bond yields rose, and Nu also lost 10% on 28 September after reports of talks to acquire Monzo, which it said two days later it was not pursuing. Metaplanet fell 9.5% during a dispute over its executive stock option pool.",
+]

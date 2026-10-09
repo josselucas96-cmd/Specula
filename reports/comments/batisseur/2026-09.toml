@@ -1,0 +1,12 @@
+market_comment = [
+  "US equities diverged in September. The Nasdaq 100 rose about 3% and set a record close on 22 September, while the S&P 500 was little changed, the Dow fell 4.3% and the Russell 2000 5.4%. Technology and communication services were the only sectors of the S&P 500 to rise.",
+  "The Federal Reserve raised its policy rate by 0.25 point to 3.75-4.00% on 16 September, its first increase since July 2023, citing inflation that remains elevated. Brent crude rose about 14% over the month, to $103.5, as shipping through the Strait of Hormuz remained disrupted, and the 10-year Treasury yield rose from 4.75% to 5.29%, its largest monthly increase since September 2022.",
+  "Financial stocks were among the weakest of the month, as the yield curve flattened and investors weighed the risk that AI agents could move deposits away from banks. Software and information services companies also fell on concerns about artificial intelligence, while chip makers rose.",
+]
+
+mgmt_comment = [
+  "Le Bâtisseur returned {pf_mtd_pct}% in September against {bench_mtd_pct}% for the {bench_pri_lbl}, a difference of {alpha_mtd_pct} percentage points. The portfolio was fully invested at month-end.",
+  "No transactions were made during the month.",
+  "Fair Isaac fell 48% and cost 1.5 points against the index. In early September the US housing finance regulator allowed all lenders to use VantageScore, a competing credit score, on loans sold to Fannie Mae and Freddie Mac, and on 28 September it announced a single pricing grid for both scores, the same day Rocket Mortgage said VantageScore would become its default model. Meta rose 27% after the launch of its Muse personal AI agent on 8 September, adding 1.5 points.",
+  "Twenty-one of the twenty-eight holdings declined. Constellation Software (-10%), ServiceNow (-9%) and Verisk (-13%) fell with software and information services stocks, and Novo Nordisk fell 16%, mostly after its capital markets day on 21 September, where it guided revenue growth to 2030 in line with its industry. In the index, the gain in technology came largely from Apple and AMD, which the portfolio does not hold, while consumer discretionary, where the portfolio holds about twice the index weight, and financials were among the weakest sectors.",
+]
