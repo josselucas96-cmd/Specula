@@ -14,14 +14,14 @@ batisseur,ISRG,Intuitive Surgical,Haute Qualité,Healthcare,USA,Healthcare Equip
 batisseur,JPM,JPMorgan Chase,Obvious,Financials,USA,Fintech,4.5,145.4427925,309.4,2026-05-06,,True
 batisseur,LLY,Eli Lilly,Obvious,Healthcare,USA,Obesity,5.0,50.56276356,988.87,2026-05-06,,True
 batisseur,MA,Mastercard Incorporated,Quality Compounders,Financials,USA,Fintech,1.9692,41.22511357,477.67,2026-06-04,,True
-batisseur,MELI,MercadoLibre,Obvious,Consumer Discretionary,LatAm,Consumer Growth,5.0,27.51319106,1817.3101,2026-05-06,,True
+batisseur,MELI,MercadoLibre,Obvious,Consumer Discretionary,LatAm,Consumer Growth,3.9751,21.87353716,1817.3101,2026-05-06,,True
 batisseur,META,Meta Platforms,Obvious,Communication Services,USA,Social Platform,6.0,99.18011108,604.96,2026-05-06,,True
-batisseur,MSFT,Microsoft,Haute Qualité,Information Technology,USA,Software,4.0,97.2337012,411.38,2026-05-06,,True
+batisseur,MSFT,Microsoft,Haute Qualité,Information Technology,USA,Software,3.1713,77.08930915,411.38,2026-05-06,,True
 batisseur,NOW,"ServiceNow, Inc.",Quality Compounders,Information Technology,USA,Software,2.7642,242.66456714,113.910358,2026-06-04,,True
 batisseur,NVDA,NVIDIA,Obvious,Information Technology,USA,AI / Semi,8.0,407.12468193,196.5,2026-05-06,,True
 batisseur,NVO,Novo Nordisk,Diversification,Healthcare,Europe,Obesity,3.0,668.5981725,44.87,2026-05-06,,True
 batisseur,RACE,Ferrari,Haute Qualité,Consumer Discretionary,Europe,Luxury,2.0,0,325.44,2026-05-06,2026-06-04,False
-batisseur,RMS.PA,Hermès,Haute Qualité,Consumer Discretionary,Europe,Luxury,2.0,10.23441313,1954.1912,2026-05-06,,True
+batisseur,RMS.PA,Hermès,Haute Qualité,Consumer Discretionary,Europe,Luxury,3.0675,17.65002949,1737.96034,2026-05-06,,True
 batisseur,STZ,Constellation Brands,Diversification,Consumer Staples,USA,Consumer Growth,2.0,133.51134846,149.8,2026-05-06,,True
 batisseur,ULTA,Ulta Beauty,Haute Qualité,Consumer Discretionary,USA,Consumer Growth,3.0,0,532.53,2026-05-06,2026-10-01,False
 batisseur,V,Visa,Haute Qualité,Financials,USA,Fintech,4.0,124.21202994,322.03,2026-05-06,,True
