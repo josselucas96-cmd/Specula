@@ -1,6 +1,6 @@
 portfolio_id,ticker,name,layer,sector,geography,thematic,weight,shares,entry_price,entry_date,exit_date,is_active
 batisseur,AMZN,Amazon,Obvious,Consumer Discretionary,USA,Cloud,6.0,219.33832937,273.55,2026-05-06,,True
-batisseur,AVGO,Broadcom Inc.,Quality Compounders,Information Technology,USA,AI / Semi,2.9537,71.73876084,411.73,2026-06-04,,True
+batisseur,AVGO,Broadcom Inc.,Quality Compounders,Information Technology,USA,AI / Semi,4.3956,112.61010073,390.337989,2026-06-04,,True
 batisseur,BABA,Alibaba,Obvious,Consumer Discretionary,Asia ex-Japan,Consumer Growth,4.0,302.43459852,132.26,2026-05-06,,True
 batisseur,BSX,Boston Scientific,Haute Qualité,Healthcare,USA,Healthcare Equipment,4.0,714.54090747,55.98,2026-05-06,,True
 batisseur,CRCL,Circle,Tactical,Financials,USA,Fintech,2.0,175.14668535,114.19,2026-05-06,,True
@@ -8,8 +8,8 @@ batisseur,CSGP,"CoStar Group, Inc.",Quality Compounders,Real Estate,USA,Other,1.
 batisseur,CSU.TO,Constellation Software,Obvious,Information Technology,Canada,Software,7.0,38.63784004,1811.6955,2026-05-06,,True
 batisseur,DPZ,Domino's Pizza,Diversification,Consumer Discretionary,USA,Consumer Growth,2.0,60.28999488,331.73,2026-05-06,,True
 batisseur,EL.PA,EssilorLuxottica,Diversification,Healthcare,Europe,Healthcare Equipment,3.0,144.83315413,207.1349,2026-05-06,,True
-batisseur,FICO,Fair Isaac,Haute Qualité,Information Technology,USA,Fintech,3.0,28.13546288,1066.27,2026-05-06,,True
-batisseur,IBE.MC,Iberdrola,Diversification,Utilities,Europe,Energy Transition,2.0,865.44999242,23.1094,2026-05-06,,True
+batisseur,FICO,Fair Isaac,Haute Qualité,Information Technology,USA,Fintech,5.1678,61.92760953,834.490599,2026-05-06,,True
+batisseur,IBE.MC,Iberdrola,Diversification,Utilities,Europe,Energy Transition,2.0,0,23.1094,2026-05-06,2026-10-01,False
 batisseur,ISRG,Intuitive Surgical,Haute Qualité,Healthcare,USA,Healthcare Equipment,3.0,66.46284727,451.38,2026-05-06,,True
 batisseur,JPM,JPMorgan Chase,Obvious,Financials,USA,Fintech,4.5,145.4427925,309.4,2026-05-06,,True
 batisseur,LLY,Eli Lilly,Obvious,Healthcare,USA,Obesity,5.0,50.56276356,988.87,2026-05-06,,True
@@ -23,11 +23,12 @@ batisseur,NVO,Novo Nordisk,Diversification,Healthcare,Europe,Obesity,3.0,668.598
 batisseur,RACE,Ferrari,Haute Qualité,Consumer Discretionary,Europe,Luxury,2.0,0,325.44,2026-05-06,2026-06-04,False
 batisseur,RMS.PA,Hermès,Haute Qualité,Consumer Discretionary,Europe,Luxury,2.0,10.23441313,1954.1912,2026-05-06,,True
 batisseur,STZ,Constellation Brands,Diversification,Consumer Staples,USA,Consumer Growth,2.0,133.51134846,149.8,2026-05-06,,True
-batisseur,ULTA,Ulta Beauty,Haute Qualité,Consumer Discretionary,USA,Consumer Growth,3.0,56.33485437,532.53,2026-05-06,,True
+batisseur,ULTA,Ulta Beauty,Haute Qualité,Consumer Discretionary,USA,Consumer Growth,3.0,0,532.53,2026-05-06,2026-10-01,False
 batisseur,V,Visa,Haute Qualité,Financials,USA,Fintech,4.0,124.21202994,322.03,2026-05-06,,True
 batisseur,VICI,VICI Properties,Tactical,Real Estate,USA,Other,2.0,0,28.27,2026-05-06,2026-06-10,False
 batisseur,VRSK,Verisk Analytics,Haute Qualité,Industrials,USA,Software,3.0,166.25103907,180.45,2026-05-06,,True
-batisseur,WM,Waste Management,Diversification,Industrials,USA,Other,3.0,133.63624215,224.49,2026-05-06,,True
+batisseur,VST,Vistra Corp.,Tactical,Utilities,USA,Other,2.9796,210.91526863,141.27,2026-10-01,,True
+batisseur,WM,Waste Management,Diversification,Industrials,USA,Other,3.0,0,224.49,2026-05-06,2026-10-01,False
 batisseur,ZM,Zoom,Tactical,Information Technology,USA,Software,2.0,183.31805683,109.1,2026-05-06,,True
 nakamoto,ALCPB.PA,Capital B,Anchor,Tech,Europe,Pure,10.0,13068.28665064,7.652,2026-05-11,,True
 nakamoto,ASST,Strive Asset Management,Anchor,Finance,USA,Pure,15.0,9422.11055276,15.92,2026-05-11,,True
