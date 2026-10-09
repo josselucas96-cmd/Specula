@@ -31,8 +31,14 @@ from utils.nav import render_nav
 from utils.theme import (
     BG, ACCENT, POSITIVE, NEGATIVE, TRIM,
     TEXT_MID, PORTFOLIO_LINE, BENCHMARK_LINE, HLINE_COLOR,
+    BENCHMARK_COLORS, BENCHMARK_FALLBACK,
     chart_layout,
 )
+
+
+def benchmark_color(label: str | None, role: str) -> str:
+    """Color of a benchmark line: fixed per index, fallback by role."""
+    return BENCHMARK_COLORS.get(label or "", BENCHMARK_FALLBACK[role])
 
 
 # ── Color palettes (shared across portfolios) ────────────────────────────────
@@ -276,7 +282,7 @@ def render_performance_chart_section(
             x=secondary_index.index, y=secondary_index.values,
             name=bench_sec_lbl,
             visible="legendonly",
-            line=dict(color="#6B7280", width=1.5, dash="dot",
+            line=dict(color=benchmark_color(bench_sec_lbl, "secondary"), width=1.8, dash="dot",
                       shape="spline", smoothing=0.6),
             hovertemplate=f"%{{x|%b %d, %Y}}<br>{bench_sec_lbl}: %{{y:.1f}}<extra></extra>",
         ))
@@ -285,7 +291,7 @@ def render_performance_chart_section(
             x=_idx.index, y=_idx.values,
             name=_lbl,
             visible="legendonly",
-            line=dict(color="#8B95A5", width=1.5, dash="dashdot",
+            line=dict(color=benchmark_color(_lbl, "extra"), width=1.8, dash="dashdot",
                       shape="spline", smoothing=0.6),
             hovertemplate=f"%{{x|%b %d, %Y}}<br>{_lbl}: %{{y:.1f}}<extra></extra>",
         ))
@@ -293,7 +299,7 @@ def render_performance_chart_section(
         fig.add_trace(go.Scatter(
             x=primary_index.index, y=primary_index.values,
             name=bench_pri_lbl,
-            line=dict(color="#9CA3AF", width=1.5, dash="dash",
+            line=dict(color=benchmark_color(bench_pri_lbl, "primary"), width=1.8, dash="dash",
                       shape="spline", smoothing=0.6),
             hovertemplate=f"%{{x|%b %d, %Y}}<br>{bench_pri_lbl}: %{{y:.1f}}<extra></extra>",
         ))

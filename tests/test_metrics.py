@@ -123,3 +123,12 @@ def test_jensen_alpha_removes_what_beta_explains():
     bench = pd.Series([100.0, 120.0], index=idx)
     assert jensen_alpha(port, bench, 1.5, risk_free_annual=0.0) == pytest.approx(0.0, abs=1e-9)
     assert jensen_alpha(port, bench, 1.0, risk_free_annual=0.0) == pytest.approx(10.0)
+
+
+def test_each_index_keeps_its_own_line_color():
+    # Until 2026-10-09 every benchmark was a gray told apart by dashes only.
+    from utils.portfolio import benchmark_color
+    from utils.theme import BENCHMARK_FALLBACK
+    assert benchmark_color("S&P 500", "primary") == benchmark_color("S&P 500", "secondary")
+    assert len({benchmark_color(l, "extra") for l in ("S&P 500", "Nasdaq 100", "S&P 500 Equal Weight")}) == 3
+    assert benchmark_color("Unknown index", "secondary") == BENCHMARK_FALLBACK["secondary"]

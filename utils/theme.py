@@ -25,6 +25,23 @@ PORTFOLIO_LINE  = ACCENT
 BENCHMARK_LINE  = "#3A4560"
 HLINE_COLOR     = "#252D40"
 
+# Benchmark lines on the performance charts. Until 2026-10-09 every index was
+# a shade of gray told apart by its dash pattern only, which visitors could not
+# read. Each index keeps one color on every page (color follows the entity).
+# The set was checked with the data-viz palette validator against the chart
+# background (#080B14), all pairs, together with each portfolio's accent
+# (Visionnaire #A78BFA, Bâtisseur #F5B60A, Nakamoto #FF6A00): it clears the
+# colorblind separation and normal-vision floors on all three pages. Dash
+# patterns stay as the second cue. Unknown labels fall back by role.
+BENCHMARK_COLORS = {
+    "S&P 500":              "#C3C2B7",   # light neutral
+    "Nasdaq 100":           "#D95926",   # orange
+    "S&P 500 Equal Weight": "#3987E5",   # blue
+    "Bitcoin":              "#C3C2B7",
+    "MSTR":                 "#3987E5",
+}
+BENCHMARK_FALLBACK = {"primary": "#C3C2B7", "secondary": "#D95926", "extra": "#3987E5"}
+
 # Nav
 NAV_ACTIVE_COLOR = ACCENT
 NAV_ACTIVE_BG    = "rgba(129, 140, 248, 0.10)"
