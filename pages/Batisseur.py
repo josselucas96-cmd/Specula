@@ -19,4 +19,8 @@ render_portfolio_page("batisseur", options={
         "Diversification": "Quality Compounders",
         # Tactical stays Tactical
     },
+    # A 26-28 line book with no line above ~9% compares naturally with the
+    # equal-weight index too (Sep 2026: S&P 500 -0.3%, equal weight -4.8%).
+    # Hidden by default, one click in the legend.
+    "extra_benchmarks": [("RSP", "S&P 500 Equal Weight")],
 })

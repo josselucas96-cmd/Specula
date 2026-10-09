@@ -217,6 +217,7 @@ def render_performance_chart_section(
     primary_index,
     secondary_index,
     min_days_stats: int = 60,
+    extra_indices=None,
 ):
     """Render the Performance content: chart + Sharpe/Max DD/Beta + Monthly Returns
     table.
@@ -253,6 +254,10 @@ def render_performance_chart_section(
 
     primary_index   = _align_bench(primary_index)
     secondary_index = _align_bench(secondary_index)
+    # Optional reference lines (page option `extra_benchmarks`): chart only,
+    # hidden until clicked in the legend; no metric is computed on them.
+    extra_indices = [(lbl, _align_bench(idx)) for lbl, idx in (extra_indices or [])
+                     if idx is not None and not idx.empty]
 
     n_returns = len(port_index.pct_change().dropna())
     stats_ready = n_returns >= min_days_stats
@@ -274,6 +279,15 @@ def render_performance_chart_section(
             line=dict(color="#6B7280", width=1.5, dash="dot",
                       shape="spline", smoothing=0.6),
             hovertemplate=f"%{{x|%b %d, %Y}}<br>{bench_sec_lbl}: %{{y:.1f}}<extra></extra>",
+        ))
+    for _lbl, _idx in extra_indices:
+        fig.add_trace(go.Scatter(
+            x=_idx.index, y=_idx.values,
+            name=_lbl,
+            visible="legendonly",
+            line=dict(color="#8B95A5", width=1.5, dash="dashdot",
+                      shape="spline", smoothing=0.6),
+            hovertemplate=f"%{{x|%b %d, %Y}}<br>{_lbl}: %{{y:.1f}}<extra></extra>",
         ))
     if primary_index is not None and not primary_index.empty:
         fig.add_trace(go.Scatter(
@@ -300,7 +314,7 @@ def render_performance_chart_section(
     # Right edge = latest date across all shown series, so a 24/7 benchmark
     # (Bitcoin) extending past the portfolio's last weekday isn't clipped.
     _right_end = port_index.index[-1]
-    for _b in (primary_index, secondary_index):
+    for _b in (primary_index, secondary_index, *(idx for _, idx in extra_indices)):
         if _b is not None and not _b.empty:
             _right_end = max(_right_end, _b.index[-1])
     _span = _right_end - port_index.index[0]
@@ -687,6 +701,15 @@ Always conduct your own due diligence before making any investment decision.
             secondary_perf  = round(float(secondary_index.iloc[-1] - 100), 2)
         except BenchmarkUnavailable as exc:
             bench_error = bench_error or str(exc)
+    # Display-only reference lines (e.g. the equal-weight S&P 500 on Le
+    # Bâtisseur). Same validation as the benchmarks; one that cannot be trusted
+    # is simply left out, and none of them can shorten the portfolio's line.
+    extra_indices = []
+    for _tk, _lbl in options.get("extra_benchmarks", []):
+        try:
+            extra_indices.append((_lbl, get_benchmark_index(_tk, chart_start)))
+        except BenchmarkUnavailable:
+            pass
 
     # Read NAV series from daily_holdings (real fund accounting).
     # The series naturally starts at 100 on T-1 (the CASH anchor row in DB).
@@ -826,6 +849,7 @@ Always conduct your own due diligence before making any investment decision.
             port_index=port_index,
             primary_index=primary_index,
             secondary_index=secondary_index,
+            extra_indices=extra_indices,
         )
 
     st.divider()
