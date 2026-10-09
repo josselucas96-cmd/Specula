@@ -134,3 +134,9 @@ def test_a_position_closed_before_month_end_reports_nothing(fake_sb, monkeypatch
     gmr.compute_mtd_attribution(positions, "p", "2026-06-30")
 
     assert positions[0]["contribution_mtd"] is None
+
+
+def test_published_report_title_is_in_english():
+    # The site listed "Juin 2026 — Monthly Report — …" until 2026-10-09.
+    assert gmr.report_title("Le Bâtisseur", "2026-09") == "September 2026 — Monthly Report — Le Bâtisseur"
+    assert gmr.report_title("Le Nakamoto", "2026-05").startswith("May 2026")

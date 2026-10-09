@@ -25,8 +25,6 @@ os.chdir(ROOT)
 
 import generate_monthly_report as gmr  # noqa: E402  (connects to Supabase at import)
 
-FR_MONTHS = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août",
-             "Septembre", "Octobre", "Novembre", "Décembre"]
 BUCKET = "research-docs"
 
 
@@ -54,8 +52,7 @@ def main() -> int:
 
     portfolio = gmr.fetch_portfolio(a.portfolio)
     name = portfolio["name"]
-    y, m = int(a.month[:4]), int(a.month[5:7])
-    title = f"{FR_MONTHS[m-1]} {y} — Monthly Report — {name}"
+    title = gmr.report_title(name, a.month)
     today = date.today().isoformat()
     object_name = f"{today}_{slug(title)}.pdf"
 

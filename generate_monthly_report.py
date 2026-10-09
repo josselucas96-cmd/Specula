@@ -143,6 +143,16 @@ def month_end(month: str) -> str:
     return str(pd.Timestamp(month + "-01") + pd.offsets.MonthEnd(0))[:10]
 
 
+EN_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
+             "September", "October", "November", "December"]
+
+
+def report_title(portfolio_name: str, month: str) -> str:
+    """Title of the published report on the site: 'September 2026 — Monthly Report — Le Bâtisseur'.
+    English like the report itself (French month names until 2026-10-09)."""
+    return f"{EN_MONTHS[int(month[5:7]) - 1]} {month[:4]} — Monthly Report — {portfolio_name}"
+
+
 def load_comments(portfolio_id: str, report_date: str) -> tuple[list, list, bool]:
     """(market_comment, mgmt_comment, is_draft) for that portfolio/month."""
     path = COMMENTS_DIR / portfolio_id / f"{report_date[:7]}.toml"
