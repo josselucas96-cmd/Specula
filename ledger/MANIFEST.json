@@ -1,10 +1,10 @@
 {
- "exported_at_utc": "2026-10-17T13:06:09+00:00",
+ "exported_at_utc": "2026-10-17T23:55:44+00:00",
  "tables": {
   "daily_holdings": {
-   "rows": 17630,
-   "sha256": "0d7deac4f4e211890fa096c51791c98f7456687f44b8dcceaff4ea21925979a8",
-   "last_date": "2026-10-16"
+   "rows": 17715,
+   "sha256": "c06ce68b3d51054869c8b437e610df72dca4ab4e974b0407075e8d07d3a72550",
+   "last_date": "2026-10-17"
   },
   "positions": {
    "rows": 92,
