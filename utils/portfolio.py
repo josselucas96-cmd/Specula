@@ -36,6 +36,32 @@ from utils.theme import (
 )
 
 
+_EN_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
+              "September", "October", "November", "December"]
+
+
+def document_sort_key(doc: dict) -> str:
+    """Newest first by the period a document covers. Monthly reports are titled
+    'September 2026 — Monthly Report — …' and were often published the same day
+    (the May-August catch-up all on 2026-09-23), so the publication date alone
+    listed them in an arbitrary order. Other documents fall back to it."""
+    title = (doc.get("title") or "").split(" ")
+    if len(title) >= 2 and title[0] in _EN_MONTHS and title[1].isdigit():
+        return f"{title[1]}-{_EN_MONTHS.index(title[0]) + 1:02d}-31"
+    return str(doc.get("published_at") or "")
+
+
+def monthly_display(mrt: pd.DataFrame, inc_year: int | None = None, inc_col: str | None = None) -> pd.DataFrame:
+    """Monthly returns as display strings: '+1.0', '-5.8', '' for a month with
+    no figure, and '*' on the partial inception month. st.dataframe shows a
+    missing value as 'None' whatever the Styler's na_rep, which is what visitors
+    saw on every month not yet completed."""
+    disp = mrt.apply(lambda col: col.map(lambda v: f"{v:+.1f}" if pd.notna(v) else ""))
+    if inc_year in disp.index and inc_col in disp.columns and disp.loc[inc_year, inc_col]:
+        disp.loc[inc_year, inc_col] += "*"
+    return disp
+
+
 def benchmark_color(label: str | None, role: str) -> str:
     """Color of a benchmark line: fixed per index, fallback by role."""
     return BENCHMARK_COLORS.get(label or "", BENCHMARK_FALLBACK[role])
@@ -381,19 +407,12 @@ def render_performance_chart_section(
         inc_col  = _MONTHS[inc_ts.month - 1]
         inc_year = inc_ts.year
 
-        def _color_monthly(col):
-            return [
-                "color: #00D09C" if pd.notna(v) and v > 0
-                else "color: #FF4B4B" if pd.notna(v) and v < 0
-                else "" for v in col
-            ]
-        fmt = {m: (lambda v: f"{v:+.1f}" if pd.notna(v) else "") for m in mrt.columns}
-        styled_mrt = mrt.style.format(fmt, na_rep="").apply(_color_monthly)
-        if inc_year in mrt.index and inc_col in mrt.columns:
-            styled_mrt = styled_mrt.format(
-                lambda v: f"{v:+.1f}*" if pd.notna(v) else "",
-                subset=pd.IndexSlice[[inc_year], [inc_col]], na_rep="",
-            )
+        def _color_monthly(v):
+            return ("color: #00D09C" if v.startswith("+")
+                    else "color: #FF4B4B" if v.startswith("-") else "")
+        disp = monthly_display(mrt, inc_year, inc_col)
+        _styler = disp.style
+        styled_mrt = (_styler.map if hasattr(_styler, "map") else _styler.applymap)(_color_monthly)
         st.dataframe(styled_mrt, width="stretch",
                      height=38 + min(len(mrt), 10) * 35)
         st.caption(f"\\* Partial month — return from inception ({inception_date}) to month-end.")
@@ -1146,7 +1165,8 @@ Always conduct your own due diligence before making any investment decision.
     # ── Documents (portfolio-specific only) ───────────────────────────────────
     if show_documents_section:
         all_docs = [p for p in get_research() if p["status"] in ("published", "locked")]
-        portfolio_docs = [d for d in all_docs if d.get("portfolio_id") == portfolio_id]
+        portfolio_docs = sorted((d for d in all_docs if d.get("portfolio_id") == portfolio_id),
+                                key=document_sort_key, reverse=True)
         if portfolio_docs:
             st.divider()
             with st.expander("Documents", expanded=True):

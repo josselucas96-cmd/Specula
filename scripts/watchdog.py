@@ -134,6 +134,12 @@ def _gh(path):
         return json.load(resp)
 
 
+def latest_success(runs: list[dict]) -> list[dict]:
+    """[newest run whose conclusion is success] or [] (runs in any order)."""
+    ok = [r for r in runs if r.get("conclusion") == "success" and r.get("created_at")]
+    return sorted(ok, key=lambda r: r["created_at"], reverse=True)[:1]
+
+
 def check_workflow():
     if not os.environ.get("GITHUB_TOKEN"):
         notes.append("workflow state: skipped (no GITHUB_TOKEN)"); return
@@ -148,7 +154,12 @@ def check_workflow():
             (notes if r["conclusion"] == "success" else problems).append(line)
         # keep-awake must have visited the app in the last 12h (Streamlit sleeps
         # after 12h without traffic); GitHub sometimes delays or drops crons.
-        ka = _gh("actions/workflows/keep-awake.yml/runs?per_page=1&status=success").get("workflow_runs", [])
+        # No `status=success` filter: GitHub serves that filtered list from a
+        # lagging index, and on 2026-10-06 it returned a 74-hour-old run while
+        # every visit since had succeeded (false alert). Take the latest runs
+        # and pick the newest successful one ourselves.
+        runs_ka = _gh("actions/workflows/keep-awake.yml/runs?per_page=20").get("workflow_runs", [])
+        ka = latest_success(runs_ka)
         if ka:
             ts = datetime.fromisoformat(ka[0]["created_at"].replace("Z", "+00:00"))
             age_h = (datetime.now(timezone.utc) - ts).total_seconds() / 3600

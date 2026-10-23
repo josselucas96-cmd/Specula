@@ -134,7 +134,7 @@ value ÷ NAV), not target weights.
 <div class="section-title">7. Public ledger &amp; Bitcoin timestamps</div>
 <p>
 The whole ledger is exported every night to the public GitHub repository
-(<a href="https://github.com/josselucas96-cmd/Specula/tree/main/ledger" target="_blank" style="color:#00D09C;">ledger/</a>):
+(<a href="https://github.com/josselucas96-cmd/Specula/tree/ledger/ledger" target="_blank" style="color:#00D09C;">ledger branch</a>):
 daily holdings, positions, the trade log. The git history is an independent, tamper-evident copy of the
 track record, and the SHA-256 of each day's export is anchored in the Bitcoin blockchain with
 <a href="https://opentimestamps.org" target="_blank" style="color:#00D09C;">OpenTimestamps</a>. Anyone can

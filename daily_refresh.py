@@ -620,10 +620,14 @@ def find_stale_rows(sb, portfolio_ids: list[str], target_date_str: str,
 
       * weekends are skipped — they legitimately carry Friday forward;
       * a day whose close is still unpublished is left alone;
-      * only the largest US-listed position is probed, one download per
-        portfolio, so the check costs about four requests a night.
+      * every US-listed position is checked, in one download per portfolio.
+        Until 2026-10-23 only the largest one was probed: on 6 October Strive
+        was stamped with the previous session's close while the probe was
+        right, and only the morning watchdog noticed. Foreign listings are
+        skipped (their stored price includes that day's FX rate).
 
-    Returns the (portfolio, date) pairs that need rewriting.
+    Returns the (portfolio, date) pairs that need rewriting, each with the
+    position that deviates most.
     """
     from datetime import datetime, timedelta
     import pandas as pd
@@ -644,29 +648,36 @@ def find_stale_rows(sb, portfolio_ids: list[str], target_date_str: str,
                   if r["ticker"] != "CASH" and "." not in r["ticker"] and r.get("price")]
         if not usable:
             continue
-        probe = max(usable, key=lambda r: float(r["value"]))["ticker"]
+        tickers = sorted({r["ticker"] for r in usable})
         end = (datetime.strptime(dates[-1], "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
         try:
-            hist = yf.download(probe, start=dates[0], end=end, progress=False, auto_adjust=False)
+            hist = yf.download(tickers if len(tickers) > 1 else tickers[0], start=dates[0], end=end,
+                               progress=False, auto_adjust=False)
             close = hist["Close"]
-            if isinstance(close, pd.DataFrame):
-                close = close.iloc[:, 0]
-            close = close.dropna()
+            if isinstance(close, pd.Series):
+                close = close.to_frame(name=tickers[0])
             close.index = pd.to_datetime(close.index.date)
         except Exception as e:
-            print(f"  [{pid}] could not re-price {probe}: {e}", flush=True)
+            print(f"  [{pid}] could not re-price its US positions: {e}", flush=True)
             continue
 
-        written = {r["date"]: float(r["price"]) for r in rows if r["ticker"] == probe}
+        written = {(r["date"], r["ticker"]): float(r["price"]) for r in usable}
         for d in dates:
             ts = pd.Timestamp(d)
-            if d not in written or ts not in close.index:
-                continue
-            actual = float(close.loc[ts])
-            if actual <= 0 or abs(actual - written[d]) / actual <= 0.005:
-                continue
-            stale.append({"portfolio": pid, "date": d, "probe": probe,
-                          "written": written[d], "actual": actual})
+            worst = None
+            for t in tickers:
+                # A column missing from a truncated answer is simply not checked.
+                if (d, t) not in written or t not in close.columns or ts not in close.index:
+                    continue
+                actual = close.at[ts, t]
+                if pd.isna(actual) or float(actual) <= 0:
+                    continue
+                dev = abs(float(actual) - written[(d, t)]) / float(actual)
+                if dev > 0.005 and (worst is None or dev > worst[0]):
+                    worst = (dev, t, written[(d, t)], float(actual))
+            if worst:
+                stale.append({"portfolio": pid, "date": d, "probe": worst[1],
+                              "written": worst[2], "actual": worst[3]})
     return stale
 
 
