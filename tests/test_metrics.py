@@ -132,3 +132,26 @@ def test_each_index_keeps_its_own_line_color():
     assert benchmark_color("S&P 500", "primary") == benchmark_color("S&P 500", "secondary")
     assert len({benchmark_color(l, "extra") for l in ("S&P 500", "Nasdaq 100", "S&P 500 Equal Weight")}) == 3
     assert benchmark_color("Unknown index", "secondary") == BENCHMARK_FALLBACK["secondary"]
+
+
+def test_documents_are_listed_newest_period_first():
+    # The May-August reports were all published on 2026-09-23 and showed in
+    # an arbitrary order (June, May, July, August).
+    from utils.portfolio import document_sort_key
+    docs = [{"title": t, "published_at": p} for t, p in [
+        ("June 2026 — Monthly Report — Le Bâtisseur", "2026-09-23"),
+        ("Le Bâtisseur - Investment Philosophy", "2026-05-06"),
+        ("May 2026 — Monthly Report — Le Bâtisseur", "2026-09-23"),
+        ("September 2026 — Monthly Report — Le Bâtisseur", "2026-10-09"),
+        ("August 2026 — Monthly Report — Le Bâtisseur", "2026-09-23")]]
+    order = [d["title"].split(" —")[0] for d in sorted(docs, key=document_sort_key, reverse=True)]
+    assert order == ["September 2026", "August 2026", "June 2026", "May 2026",
+                     "Le Bâtisseur - Investment Philosophy"]
+
+
+def test_monthly_table_shows_blanks_not_none():
+    import pandas as pd
+    from utils.portfolio import monthly_display
+    mrt = pd.DataFrame({"May": [1.04], "Jun": [-5.75], "Oct": [float("nan")]}, index=[2026])
+    disp = monthly_display(mrt, inc_year=2026, inc_col="May")
+    assert disp.loc[2026].tolist() == ["+1.0*", "-5.8", ""]

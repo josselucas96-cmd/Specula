@@ -354,3 +354,23 @@ def test_an_unpublished_close_still_fills_the_previous_days(monkeypatch):
 def test_a_holiday_is_still_written_with_the_previous_close(monkeypatch):
     calls = _run_main(monkeypatch, published=False)
     assert calls["written"] == [("visionnaire", "2026-09-24")]
+
+
+def test_every_us_position_is_checked_not_only_the_largest(monkeypatch, fake_sb):
+    """6 Oct 2026: Strive was stamped with the previous close while the largest
+    position (the old single probe) was correctly priced."""
+    import pandas as pd
+    sb = fake_sb(_holdings([
+        ("nakamoto", "2026-10-06", "MSTR", 164.55, 210000.0),   # largest, correct
+        ("nakamoto", "2026-10-06", "ASST", 30.26, 180000.0),    # 5 Oct close
+        ("nakamoto", "2026-10-06", "ALCPB.PA", 6.5, 80000.0),   # foreign: not checked
+    ]))
+    monkeypatch.setattr(dr, "session_close_published", lambda d, *a: (True, d))
+    cols = pd.MultiIndex.from_tuples([("Close", "ASST"), ("Close", "MSTR")])
+    frame = pd.DataFrame([[29.75, 164.55]], index=pd.to_datetime(["2026-10-06"]), columns=cols)
+    monkeypatch.setattr(dr.yf, "download", lambda *a, **k: frame)
+
+    stale = dr.find_stale_rows(sb, ["nakamoto"], "2026-10-07", lookback_days=1)
+
+    assert [(s["date"], s["probe"], s["written"], s["actual"]) for s in stale] == [
+        ("2026-10-06", "ASST", 30.26, 29.75)]

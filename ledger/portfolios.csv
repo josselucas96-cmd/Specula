@@ -1,5 +1,0 @@
-id,name,inception_date,initial_capital,benchmark_primary,benchmark_secondary,is_active
-batisseur,Le Bâtisseur,2026-05-06,1000000,SPY,QQQ,True
-nakamoto,Le Nakamoto,2026-05-11,1000000,BTC-USD,MSTR,True
-test,Portfolio_Test,2026-01-01,1000000,SPY,QQQ,False
-visionnaire,Le Visionnaire,2026-04-13,1000000,QQQ,SPY,True

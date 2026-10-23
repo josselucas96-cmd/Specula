@@ -5,7 +5,14 @@ name: Ledger export + Bitcoin timestamp
 # SHA256SUMS of that export in the Bitcoin blockchain with OpenTimestamps
 # (free calendar servers, no account). Proofs live in ledger/proofs/ and are
 # upgraded on later runs once the Bitcoin attestation exists.
-# Verification: see ledger/README.md.
+# Verification: see ledger/README.md on the `ledger` branch.
+#
+# The export is committed to the dedicated `ledger` branch, not to main.
+# Streamlit Community Cloud redeploys the public app on every commit to main:
+# until 2026-10-23 these exports restarted the site twice a day, and a visitor
+# arriving during the restart saw "Connection failed with status 500".
+# The `ledger` branch was cut from main on 2026-10-23, so its history continues
+# the full record committed to main before that date.
 
 on:
   workflow_run:
@@ -25,9 +32,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Checkout the ledger branch
+        uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ledger
+          path: ledger-branch
 
       - uses: actions/setup-python@v5
         with:
@@ -43,10 +55,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: python scripts/export_ledger.py --out ledger
+        run: python scripts/export_ledger.py --out ledger-branch/ledger
 
       - name: Timestamp SHA256SUMS on Bitcoin (OpenTimestamps)
         continue-on-error: true
+        working-directory: ledger-branch
         run: |
           set -e
           D=$(date -u +%F)
@@ -67,11 +80,12 @@ jobs:
           done
           ots info "$SNAP.ots" | head -20 || true
 
-      - name: Commit ledger + proofs
+      - name: Commit ledger + proofs to the ledger branch
+        working-directory: ledger-branch
         run: |
           git config user.name  "specula-bot"
           git config user.email "specula-bot@users.noreply.github.com"
           git add ledger
           git diff --cached --quiet && { echo "ledger unchanged"; exit 0; }
           git commit -m "ledger: $(date -u +%F) export + OTS proof"
-          git push
+          git push origin HEAD:ledger

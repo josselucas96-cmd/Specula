@@ -45,3 +45,12 @@ def test_workflow_installs_what_the_watchdog_imports():
     for pkg in ("pandas", "yfinance", "supabase"):
         if f"import {pkg}" in src or f"from {pkg}" in src:
             assert pkg in yml, f"watchdog.py imports {pkg} but the workflow does not install it"
+
+
+def test_latest_successful_keep_awake_run_is_found_without_the_lagging_filter():
+    # 6 Oct 2026: the status=success list returned a 74-hour-old run.
+    runs = [{"created_at": "2026-10-06T06:16:08Z", "conclusion": "success"},
+            {"created_at": "2026-10-06T13:21:02Z", "conclusion": "failure"},
+            {"created_at": "2026-10-06T00:00:52Z", "conclusion": "success"}]
+    assert wd.latest_success(runs)[0]["created_at"] == "2026-10-06T06:16:08Z"
+    assert wd.latest_success([{"created_at": "x", "conclusion": "cancelled"}]) == []
