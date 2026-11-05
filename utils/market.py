@@ -235,6 +235,138 @@ def get_prices_from_db(tickers: tuple) -> dict:
     return result
 
 
+# ── Hourly display quotes ─────────────────────────────────────────────────────
+# The positions table used to show `current_prices` as written by the nightly
+# cron: yesterday's close, and a "Today %" measured against Yahoo's
+# previous_close, which includes after-hours trading (DUOL showed +12.8% on
+# 2026-11-04 for a +26.0% session). Pages now refresh those two columns from
+# Yahoo's daily bars at most once an hour, for display only. The ledger, the
+# NAV chart and every published performance figure still come from the
+# nightly closes in daily_holdings; nothing here is written anywhere.
+#
+# The worst case is the old behaviour: any ticker whose live quote is missing,
+# late, or fails the check below keeps its `current_prices` row.
+LIVE_TTL_S = 3600          # one Yahoo pass per ticker and hour at most
+LIVE_RETRY_S = 600         # after a failed pass, wait before asking again
+LIVE_DEADLINE_S = 10       # longest a page waits for that pass
+LIVE_MATCH_TOL = 0.03      # the stored close must be found in the live series
+
+
+def parse_daily_closes(df, tickers) -> dict:
+    """{ticker: [close, ...]} oldest first, from a yf.download daily frame.
+    Handles the multi-ticker layout (Close × ticker) and the single-ticker one;
+    drops empty rows. Tickers without at least two closes are left out."""
+    import pandas as pd
+    out = {}
+    if df is None or getattr(df, "empty", True):
+        return out
+    close = df["Close"] if "Close" in df.columns.get_level_values(0) else None
+    if close is None:
+        return out
+    if isinstance(close, pd.Series):
+        close = close.to_frame(name=tickers[0])
+    for t in tickers:
+        if t not in close.columns:
+            continue
+        s = pd.to_numeric(close[t], errors="coerce").dropna()
+        s = s[s > 0]
+        if len(s) >= 2:
+            out[t] = [float(v) for v in s.tolist()]
+    return out
+
+
+def merge_live_quotes(eod: dict, live: dict, tol: float = LIVE_MATCH_TOL) -> dict:
+    """Overlay hourly quotes on the nightly rows, ticker by ticker.
+
+    eod:  {ticker: {price, change_pct, market_cap, currency}}, prices in USD
+          (get_prices_from_db).
+    live: {ticker: {"closes": [...] in USD, oldest first, "as_of": iso}}.
+
+    A live quote replaces the nightly row only when its series contains the
+    nightly price (within `tol`): that proves it is the same instrument, in the
+    same unit and on the same share basis. It rejects a mixed-up download (the
+    2026-09-23 incident), a currency or pence error, and a split the nightly
+    job has not applied yet, while still accepting a genuine large move today.
+    A ticker with no nightly row (a position opened today) takes the live quote
+    only if it is a US listing (no exchange suffix), whose price is in USD.
+    """
+    out = {}
+    for t, row in eod.items():
+        merged = dict(row)
+        merged["as_of"] = None
+        q = live.get(t)
+        if q and len(q.get("closes") or []) >= 2:
+            closes = q["closes"]
+            ref = row.get("price")
+            if ref:
+                ok = any(abs(c / ref - 1) <= tol for c in closes[-4:])
+            else:
+                ok = "." not in t
+            if ok:
+                last, prev = closes[-1], closes[-2]
+                merged["price"] = round(last, 4)
+                merged["change_pct"] = round((last / prev - 1) * 100, 2)
+                merged["as_of"] = q.get("as_of")
+        out[t] = merged
+    return out
+
+
+@st.cache_resource
+def _live_store() -> dict:
+    """One store per server process, shared by every visitor."""
+    return {"quotes": {}, "failed": {}, "lock": threading.Lock()}
+
+
+def _refresh_live(tickers: tuple, currencies: dict) -> None:
+    """Fetch the daily bars of the stale tickers once, if no other visitor is
+    already doing it. Never raises: a failure only delays the next attempt."""
+    import time
+    from datetime import datetime, timezone
+    store = _live_store()
+    now = time.time()
+    stale = [t for t in tickers
+             if now - store["quotes"].get(t, {}).get("ts", 0) > LIVE_TTL_S
+             and now - store["failed"].get(t, 0) > LIVE_RETRY_S]
+    if not stale or not store["lock"].acquire(blocking=False):
+        return
+    try:
+        try:
+            df = yf_download(stale, period="7d", interval="1d", auto_adjust=False,
+                             progress=False, group_by="column", deadline=LIVE_DEADLINE_S)
+            closes = parse_daily_closes(df, stale)
+        except Exception:
+            closes = {}
+        fx = get_fx_to_usd(tuple({c for c in currencies.values() if c}))
+        as_of = datetime.now(timezone.utc).isoformat(timespec="minutes")
+        for t in stale:
+            ccy = currencies.get(t)
+            f = usd_factor(ccy, fx) if ccy else None     # unknown currency: no live quote
+            if t in closes and f is not None:
+                store["quotes"][t] = {"closes": [c * f for c in closes[t]],
+                                      "as_of": as_of, "ts": now}
+                store["failed"].pop(t, None)
+            else:
+                store["failed"][t] = now
+    finally:
+        store["lock"].release()
+
+
+def get_display_prices(tickers: tuple) -> dict:
+    """Prices for the public positions table: the nightly rows, overlaid with
+    hourly Yahoo quotes where those pass `merge_live_quotes`'s check. Same
+    shape as get_prices_from_db, plus "as_of" (ISO time of the live quote, or
+    None when the nightly row is shown)."""
+    eod = get_prices_from_db(tickers)
+    currencies = {t: (r.get("currency") or ("USD" if "." not in t else None))
+                  for t, r in eod.items()}
+    try:
+        _refresh_live(tickers, currencies)
+    except Exception:
+        pass
+    quotes = _live_store()["quotes"]
+    return merge_live_quotes(eod, {t: quotes[t] for t in tickers if t in quotes})
+
+
 # Approximate BTC holdings per Nakamoto position. Estimates as of Q3 2025
 # disclosures — UPDATE FROM ACTUAL FILINGS as positions evolve. STRC is a
 # preferred share with no direct BTC exposure (holders earn USD coupons).

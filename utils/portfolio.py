@@ -12,7 +12,7 @@ from datetime import date, timedelta
 
 from utils.data import get_positions, get_setting, get_portfolio, get_cash_amount
 from utils.market import (
-    get_prices_from_db as get_prices,
+    get_display_prices as get_prices,
     get_history,
     get_benchmark_index,
     BenchmarkUnavailable,
@@ -630,6 +630,7 @@ Always conduct your own due diligence before making any investment decision.
         live = prices.get(p["ticker"], {})
         p["current_price"] = live.get("price")
         p["change_today"]  = live.get("change_pct")
+        p["as_of"]         = live.get("as_of")
         factor = tr_factors.get(p["ticker"], {"shares_factor": 1.0, "div_return_pct": 0.0})
         p["div_return"] = factor["div_return_pct"]
         if p["current_price"] and p["entry_price"]:
@@ -954,6 +955,10 @@ Always conduct your own due diligence before making any investment decision.
         st.dataframe(styled, width="stretch", hide_index=True, height=table_height,
                      column_config=_col_cfg or None)
         st.caption(f"Cash / Equivalent — Current: {current_cash_pct:.1f}%")
+        _as_of = sorted(p["as_of"] for p in positions if p.get("as_of"))
+        if _as_of:
+            st.caption(f"Prices and Today % as of {_as_of[0][11:16]} UTC (Yahoo Finance, refreshed "
+                       "at most hourly). Performance figures and charts use official closes.")
         if display["Adj. Return %"].notna().any() if "Adj. Return %" in display.columns else False:
             st.caption("Adj. Return %: return on all the capital invested in the position, "
                        "including gains or losses realised on partial sales. Shown only for "
