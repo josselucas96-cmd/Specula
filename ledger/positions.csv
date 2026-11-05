@@ -69,17 +69,18 @@ test,VICI,VICI Properties,Tactical,Real Estate,USA,Other,2.0,0,28.12,2026-01-01,
 test,VRSK,Verisk Analytics,Haute Qualité,Industrials,USA,Software,3.0,0,223.69,2026-01-01,2026-05-17,False
 test,WM,Waste Management,Diversification,Industrials,USA,Other,3.0,136.54362152,219.71,2026-01-01,,True
 test,ZM,Zoom,Tactical,Information Technology,USA,Software,2.0,231.77656493,86.29,2026-01-01,,True
-visionnaire,AMD,AMD,Conviction,Tech,USA,AI / Semi,1.0994,44.86607045,245.03,2026-04-13,,True
+visionnaire,AMD,AMD,Conviction,Tech,USA,AI / Semi,1.0994,0,245.03,2026-04-13,2026-11-05,False
 visionnaire,AMZN,Amazon,Core,Tech,USA,Cloud / Infrastructure,8,0,237.45,2026-04-13,2026-06-01,False
 visionnaire,AVGO,Broadcom Inc.,Core,Tech,USA,AI / Semi,7.3826,213.67725758,345.502307,2026-09-23,,True
 visionnaire,BMNR,Bitmine Immersion Tech,Moonshot,Finance,USA,Crypto Currencies Play,2,953.28884652,20.98,2026-04-13,,True
-visionnaire,CELH,Celsius Holdings,Conviction,Consumer,USA,Consumer Growth,13.52434356477776,4115.29728576,32.863588,2026-04-13,,True
+visionnaire,CELH,Celsius Holdings,Conviction,Consumer,USA,Consumer Growth,9.2755,2822.43784509,32.863588,2026-04-13,,True
 visionnaire,CRSP,CRISPR Therapeutics,Moonshot,Healthcare,USA,Biotech,2,391.46604032,51.09,2026-04-13,,True
 visionnaire,DUOL,Duolingo,Moonshot,Tech,USA,Social Platform,2,221.8770801,90.14,2026-04-13,,True
 visionnaire,HIMS,Hims & Hers Health,Conviction,Healthcare,USA,Digital Health,9.270738717938727,4665.70337363,19.86997,2026-04-13,,True
 visionnaire,LFMD,LifeMD,Moonshot,Healthcare,USA,Digital Health,1,2915.45189504,3.43,2026-04-13,,True
 visionnaire,META,Meta Platforms,Core,Communication,USA,Social Platform,10,158.85623511,629.5,2026-04-13,,True
 visionnaire,MTPLF,Metaplanet,Conviction,Finance,Japan,Crypto Currencies Play,7.9935,41581.33772057,1.922377,2026-04-13,,True
+visionnaire,MU,Micron Technology,Moonshot,Tech,USA,Semiconductors / Memory,2.1274,30.52749397,696.88,2026-11-05,,True
 visionnaire,NBIS,Nebius Group,Conviction,Tech,Europe,AI / Semi,7.5202,510.38796349,147.342835,2026-04-13,,True
 visionnaire,NIO,NIO Inc.,Moonshot,Consumer,China,Robotics / Automation,1.178074,2231.20075758,5.28,2026-05-26,,True
 visionnaire,NU,Nu Holdings Ltd.,Conviction,Finance,LatAm,Fintech / Payments,4.712296,3667.15642023,12.85,2026-05-26,,True
@@ -87,7 +88,7 @@ visionnaire,NVDA,NVIDIA,Core,Tech,USA,AI / Semi,12,645.05724883,186.03,2026-04-1
 visionnaire,RKLB,Rocket Lab USA,Conviction,Industrials,USA,Space / Defense,3.0289,0,67.05,2026-04-13,2026-09-23,False
 visionnaire,SMCI,"Super Micro Computer, Inc.",Moonshot,Tech,USA,AI / Semi,2.3817,684.63306104,34.787981,2026-05-26,,True
 visionnaire,SMR,NuScale Power,Moonshot,Industrials,USA,Energy Transition,1,1103.75275938,9.06,2026-04-13,,True
-visionnaire,SOFI,"SoFi Technologies, Inc.",Conviction,Finance,USA,Fintech / Payments,4.712296,2923.26054591,16.12,2026-05-26,,True
+visionnaire,SOFI,"SoFi Technologies, Inc.",Conviction,Finance,USA,Fintech / Payments,6.4027,3976.46926865,16.10147,2026-05-26,,True
 visionnaire,STRC,Strategy STRETCH,Cash/Equivalent,Finance,USA,Crypto Currencies Play,0,0.0,100.0,2026-04-08,,False
 visionnaire,TSLA,Tesla,Conviction,Tech,USA,Robotics / Automation,9.1018,259.99956595,350.07,2026-04-13,,True
 visionnaire,XPEV,xPeng,Moonshot,Consumer,China,Robotics / Automation,1,578.7037037,17.28,2026-04-13,,True
