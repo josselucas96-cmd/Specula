@@ -65,10 +65,14 @@ def main() -> int:
             .order("date", desc=True).limit(1).execute().data[0]["date"])
     ledger = {r["ticker"]: float(r["price"]) for r in sb.table("daily_holdings").select("ticker,price")
               .eq("portfolio_id", pid).eq("date", last).execute().data if r["ticker"] != "CASH"}
+    # A real move larger than the tolerance (earnings gap while the ledger is a
+    # session behind, e.g. DUOL +26% on 2026-11-04) is accepted only when it was
+    # checked by hand and named in the plan: "verified_moves": ["DUOL"].
+    verified = set(plan_in.get("verified_moves", []))
     for t in set(pos) | wanted:
         if not px[t]["price"]:
             raise SystemExit(f"no live price for {t}")
-        if t in ledger and abs(px[t]["price"] / ledger[t] - 1) > PRICE_TOLERANCE:
+        if t in ledger and t not in verified and abs(px[t]["price"] / ledger[t] - 1) > PRICE_TOLERANCE:
             raise SystemExit(f"{t}: live {px[t]['price']} vs ledger {ledger[t]} ({last}) - FX or unit problem?")
 
     cash0 = get_cash_amount(pid)
