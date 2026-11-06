@@ -8,7 +8,8 @@ dots and looked wrong.
 The page therefore draws ONE marker per trade date, whose glyph says what
 happened that day: a green disc (bought only), a red disc (sold only), or a
 disc split in two — red on top, green at the bottom — when the day did both.
-Corporate actions (splits) are not trades and never appear on the chart.
+Corporate actions (splits, dividends) are not decisions: the page does not show
+them at all (title, chart, trade log, rebalance numbers). Use trades_only().
 Pure functions, no Streamlit, unit-tested.
 """
 
@@ -65,7 +66,11 @@ def batch_numbers(moves) -> dict[str, int]:
     return {d: i + 1 for i, d in enumerate(sorted({str(t.get("date")) for t in moves}))}
 
 
-def count_trades(moves) -> tuple[int, int]:
-    """(real trades, corporate actions). A split is not a decision."""
-    ca = sum(1 for t in moves if side_of(t) is None)
-    return len(moves) - ca, ca
+def trades_only(txns) -> list:
+    """The rows that are decisions (buy, reinforce, trim, close, switch).
+
+    Splits and dividends are dropped. Kept in, a split counted as a rebalance:
+    Le Nakamoto's first real rebalance (2026-10-23) was numbered #2 because the
+    ALCPB.PA split of 2026-09-08 took #1, while the header said "1 rebalance".
+    """
+    return [t for t in txns if side_of(t) is not None]

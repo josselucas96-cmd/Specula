@@ -16,7 +16,7 @@ from utils import SPECULA_ICON
 from utils.data import get_portfolios, get_positions, get_transactions
 from utils.market import get_benchmark_index, BenchmarkUnavailable
 from utils.nav import render_nav
-from utils.moves import BOTH, BUY, SELL, batch_numbers, count_trades, group_moves_by_date
+from utils.moves import BOTH, BUY, SELL, batch_numbers, group_moves_by_date, trades_only
 from utils.nav_history import get_nav_from_holdings
 from utils.portfolio import align_to_equity_calendar
 from utils.theme import BG, TEXT_MID, BENCHMARK_LINE, action_colors, chart_layout
@@ -41,7 +41,7 @@ st.markdown("""
 render_nav("moves")
 st.write("")
 
-ACTION_LABELS = {"IN": "Buy / reinforce", "TRIM": "Trim", "OUT": "Close", "SWITCH": "Switch", "SPLIT": "Split", "DRIP": "Dividend"}
+ACTION_LABELS = {"IN": "Buy / reinforce", "TRIM": "Trim", "OUT": "Close", "SWITCH": "Switch"}
 ACTION_COLORS = action_colors()
 
 
@@ -84,7 +84,8 @@ pf = next(p for p in portfolios if p["id"] == chosen)
 pid, accent = pf["id"], pf.get("color_primary") or "#A78BFA"
 
 # ── Data ─────────────────────────────────────────────────────────────────────
-txns = [t for t in get_transactions(portfolio_id=pid) if (t.get("action") or "").upper() not in ("DRIP",)]
+# Decisions only: splits and dividends are corporate actions, not moves.
+txns = trades_only(get_transactions(portfolio_id=pid))
 positions_all = get_positions(active_only=False, portfolio_id=pid)
 inception = str(pf.get("inception_date") or "")
 # Inception buys are a block of IN rows on the inception date — shown once, not as 16 markers.
@@ -96,12 +97,10 @@ n_initial = len(inception_lines) or sum(
     1 for p in positions_all if str(p.get("entry_date") or "") == inception)
 
 st.markdown(f'<div class="mv-eyebrow">Moves · {pf["name"]}</div>', unsafe_allow_html=True)
-_n_trades, _n_ca = count_trades(moves)
+_n_trades = len(moves)
 _title = f"{_n_trades} trade{'s' if _n_trades != 1 else ''} since inception"
-if _n_ca:
-    _title += f" · {_n_ca} corporate action{'s' if _n_ca != 1 else ''}"
 st.markdown(f'<div class="mv-title">{_title}</div>', unsafe_allow_html=True)
-_n_dates = len({str(t.get("date")) for t in moves if (t.get("action") or "").upper() != "SPLIT"})
+_n_dates = len({str(t.get("date")) for t in moves})
 _head = f'Inception {inception} with {n_initial} initial position{"s" if n_initial != 1 else ""}'
 if _n_trades == 0:
     _body = ' · no trade since inception.'
@@ -144,8 +143,7 @@ else:
     # drawn individually they land on the same point of the curve and hide each
     # other (Le Visionnaire: 13 trades on 4 dates). The glyph says what the day
     # was: a green disc (bought only), a red disc (sold only), or a disc split
-    # red-over-green when the day did both. Corporate actions are not trades and
-    # are not plotted. Markers are deliberately large — they are the subject of
+    # red-over-green when the day did both. Markers are deliberately large — they are the subject of
     # this page, not a decoration.
     BUY_COLOR = ACTION_COLORS.get("IN", "#00D09C")
     SELL_COLOR = ACTION_COLORS.get("OUT", "#FF4B4B")
@@ -256,10 +254,7 @@ else:
         a = (t.get("action") or "").upper()
         is_in = a in ("IN", "SWITCH")
         ts = t.get("executed_at")
-        # A SPLIT's executed_at is when it was applied to the book, not when it
-        # happened: show its effective date instead.
-        when = (pd.Timestamp(ts).strftime("%Y-%m-%d %H:%M UTC")
-                if ts and a != "SPLIT" else str(t.get("date")))
+        when = pd.Timestamp(ts).strftime("%Y-%m-%d %H:%M UTC") if ts else str(t.get("date"))
         rows.append({
             "Batch": f"#{_batch_no[str(t.get('date'))]}",
             "When": when,

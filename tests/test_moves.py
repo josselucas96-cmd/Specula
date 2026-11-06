@@ -6,7 +6,7 @@ sit on 4 dates, so the chart showed 4 dots for 13 trades (reported 2026-09-22).
 The page now draws exactly one marker per trading day, whose glyph says whether
 the day bought, sold, or did both.
 """
-from utils.moves import BOTH, BUY, SELL, batch_numbers, count_trades, group_moves_by_date, side_of
+from utils.moves import BOTH, BUY, SELL, batch_numbers, group_moves_by_date, side_of, trades_only
 
 
 def _t(date, action, ticker):
@@ -68,8 +68,19 @@ def test_a_sell_only_day():
 def test_corporate_actions_are_never_plotted():
     moves = VISIONNAIRE + [_t("2026-09-08", "SPLIT", "ALCPB.PA")]
     assert sum(g["n"] for g in group_moves_by_date(moves)) == 13      # split excluded
-    assert count_trades(moves) == (13, 1)
-    assert count_trades([]) == (0, 0)
+
+
+def test_corporate_actions_are_not_moves():
+    """Regression 2026-11-06: the Moves page listed the ALCPB.PA split in its
+    title and trade log, and numbered Le Nakamoto's only rebalance #2."""
+    book = [_t("2026-09-08", "SPLIT", "ALCPB.PA"), _t("2026-09-30", "DRIP", "MSTR"),
+                _t("2026-10-23", "IN", "ALCPB.PA"), _t("2026-10-23", "IN", "MSTR"),
+                _t("2026-10-23", "TRIM", "AAA"), _t("2026-10-23", "OUT", "BBB")]
+    moves = trades_only(book)
+    assert len(moves) == 4
+    assert all(t["action"] not in ("SPLIT", "DRIP") for t in moves)
+    assert batch_numbers(moves) == {"2026-10-23": 1}
+    assert trades_only([]) == []
 
 
 def test_batch_numbers_are_oldest_first():
