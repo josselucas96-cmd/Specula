@@ -1,18 +1,18 @@
 {
- "exported_at_utc": "2026-11-10T17:12:30+00:00",
+ "exported_at_utc": "2026-11-11T01:48:58+00:00",
  "tables": {
   "daily_holdings": {
-   "rows": 19688,
-   "sha256": "13c34658897115636ab7e80154a923e3764f95fe177679e8e430ff386915217e",
-   "last_date": "2026-11-09"
+   "rows": 19774,
+   "sha256": "827c4a19aff9da3d8c15d2572d3bb8b83ba3a01661fbd003d39b3fdbcdd92550",
+   "last_date": "2026-11-10"
   },
   "positions": {
    "rows": 94,
-   "sha256": "b360d5484903b2e5e93933f2151738dcbf2ca0e2d98b541bd2e65856476498ba"
+   "sha256": "11e09e2147911d6306dfaab246fa4dc4ab892b7d5fcc32bb82590bcc95220753"
   },
   "transactions": {
-   "rows": 99,
-   "sha256": "38f2dc14cfa05bd81705fa9eadac25214e888c572877f95015c924ff5bfde005"
+   "rows": 104,
+   "sha256": "ab986116f67f5e33f4438cf0fea338e8a4546937506acfd74bd16e21afdd6421"
   },
   "portfolios": {
    "rows": 4,

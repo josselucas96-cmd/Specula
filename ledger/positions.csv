@@ -1,23 +1,23 @@
 portfolio_id,ticker,name,layer,sector,geography,thematic,weight,shares,entry_price,entry_date,exit_date,is_active
-batisseur,AMZN,Amazon,Obvious,Consumer Discretionary,USA,Cloud,6.0,219.33832937,273.55,2026-05-06,,True
+batisseur,AMZN,Amazon,Obvious,Consumer Discretionary,USA,Cloud,8.162,299.75790979,272.286402,2026-05-06,,True
 batisseur,AVGO,Broadcom Inc.,Quality Compounders,Information Technology,USA,AI / Semi,4.3956,112.61010073,390.337989,2026-06-04,,True
 batisseur,BABA,Alibaba,Obvious,Consumer Discretionary,Asia ex-Japan,Consumer Growth,4.0,302.43459852,132.26,2026-05-06,,True
-batisseur,BSX,Boston Scientific,Haute Qualité,Healthcare,USA,Healthcare Equipment,4.0,714.54090747,55.98,2026-05-06,,True
+batisseur,BSX,Boston Scientific,Haute Qualité,Healthcare,USA,Healthcare Equipment,1.9228,343.47981422,55.98,2026-05-06,,True
 batisseur,CRCL,Circle,Tactical,Financials,USA,Fintech,2.0,175.14668535,114.19,2026-05-06,,True
 batisseur,CSGP,"CoStar Group, Inc.",Quality Compounders,Real Estate,USA,Other,1.977822,571.12965637,34.63,2026-06-10,,True
-batisseur,CSU.TO,Constellation Software,Obvious,Information Technology,Canada,Software,7.0,38.63784004,1811.6955,2026-05-06,,True
+batisseur,CSU.TO,Constellation Software,Obvious,Information Technology,Canada,Software,4.481,24.7337375,1811.6955,2026-05-06,,True
 batisseur,DPZ,Domino's Pizza,Diversification,Consumer Discretionary,USA,Consumer Growth,2.0,60.28999488,331.73,2026-05-06,,True
 batisseur,EL.PA,EssilorLuxottica,Diversification,Healthcare,Europe,Healthcare Equipment,3.0,144.83315413,207.1349,2026-05-06,,True
 batisseur,FICO,Fair Isaac,Haute Qualité,Information Technology,USA,Fintech,5.1678,61.92760953,834.490599,2026-05-06,,True
 batisseur,IBE.MC,Iberdrola,Diversification,Utilities,Europe,Energy Transition,2.0,0,23.1094,2026-05-06,2026-10-01,False
 batisseur,ISRG,Intuitive Surgical,Haute Qualité,Healthcare,USA,Healthcare Equipment,3.0,66.46284727,451.38,2026-05-06,,True
 batisseur,JPM,JPMorgan Chase,Obvious,Financials,USA,Fintech,4.5,145.4427925,309.4,2026-05-06,,True
-batisseur,LLY,Eli Lilly,Obvious,Healthcare,USA,Obesity,5.0,50.56276356,988.87,2026-05-06,,True
+batisseur,LLY,Eli Lilly,Obvious,Healthcare,USA,Obesity,3.1556,31.91117134,988.87,2026-05-06,,True
 batisseur,MA,Mastercard Incorporated,Quality Compounders,Financials,USA,Fintech,1.9692,41.22511357,477.67,2026-06-04,,True
 batisseur,MELI,MercadoLibre,Obvious,Consumer Discretionary,LatAm,Consumer Growth,3.9751,21.87353716,1817.3101,2026-05-06,,True
 batisseur,META,Meta Platforms,Obvious,Communication Services,USA,Social Platform,6.0,99.18011108,604.96,2026-05-06,,True
 batisseur,MSFT,Microsoft,Haute Qualité,Information Technology,USA,Software,3.1713,77.08930915,411.38,2026-05-06,,True
-batisseur,NOW,"ServiceNow, Inc.",Quality Compounders,Information Technology,USA,Software,2.7642,242.66456714,113.910358,2026-06-04,,True
+batisseur,NOW,"ServiceNow, Inc.",Quality Compounders,Information Technology,USA,Software,4.4033,409.07065851,107.641566,2026-06-04,,True
 batisseur,NVDA,NVIDIA,Obvious,Information Technology,USA,AI / Semi,8.0,407.12468193,196.5,2026-05-06,,True
 batisseur,NVO,Novo Nordisk,Diversification,Healthcare,Europe,Obesity,3.0,668.5981725,44.87,2026-05-06,,True
 batisseur,ORCL,Oracle Corporation,Tactical,Information Technology,USA,Cloud,4.1627,333.016,125.0,2026-10-23,,True
