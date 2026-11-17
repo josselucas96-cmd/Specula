@@ -20,6 +20,13 @@ def render_nav(current: str):
     on Streamlit Cloud). The URL bar may not update on click due to Streamlit's
     internal navigation, but bookmarks via direct URL still work.
     """
+    # Anonymous visit counter (utils/visits.py). Every public page draws this
+    # bar, so this is the one place to count page views. Never blocks a page.
+    try:
+        from utils.visits import log_visit
+        log_visit(current)
+    except Exception:
+        pass
     portfolio_keys = {"visionnaire", "nakamoto", "batisseur"}
     is_portfolio_active = current in portfolio_keys
     v_active = "dropdown-active" if current == "visionnaire" else ""
