@@ -4,6 +4,15 @@
 #         impact (what changed in published figures), status.
 
 [[entry]]
+date   = "2026-11-10"
+scope  = "Le Bâtisseur"
+title  = "Boston Scientific: the durability of its competitive advantage was overestimated"
+what   = "Boston Scientific entered Le Bâtisseur at launch (6 May 2026) as a quality compounder, at about 4% of the portfolio and an average cost of $55.98. The thesis rested on the lead built with FARAPULSE, its pulsed field ablation catheter. I overestimated how durable that lead would be: switching costs for hospitals are low, and the company cut its 2026 guidance four times during the year, with organic growth now expected at about 3.75%. This was an error in the qualitative analysis of the business model."
+fix    = "Position halved on 10 November 2026 at $43.99, as the first step of a gradual exit. The remaining 1.5% will be reviewed at the fourth-quarter results at the end of January 2027."
+impact = "No published figure was wrong. The position has cost about $8,670 to date (realised and unrealised, at the 16 November close), about 0.9% of the portfolio's starting capital."
+status = "open"
+
+[[entry]]
 date   = "2026-09-25"
 scope  = "All portfolios"
 title  = "No ledger rows written on 23 and 24 September"
