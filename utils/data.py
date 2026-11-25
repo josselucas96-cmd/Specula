@@ -100,7 +100,9 @@ def get_cash_amount(portfolio_id: str) -> float:
     since 2026-05-15). Instead we derive on read from:
       1. Latest `daily_holdings` CASH row strictly BEFORE today (= yesterday's
          close cash, or initial_capital if no prior row exists).
-      2. + Σ today's transaction $-deltas (TRIM/CLOSE proceeds, IN/SWITCH costs).
+      2. + Σ $-deltas of every transaction dated after that row, today included
+         (TRIM/CLOSE proceeds, IN/SWITCH costs). Looking at today only lost the
+         2026-11-17 move when that day had no ledger row ($27,749 phantom cash).
 
     DRIP and SPLIT are cash-neutral by design (skipped).
 
@@ -125,14 +127,16 @@ def get_cash_amount(portfolio_id: str) -> float:
     )
     baseline = float(rows[0]["value"]) if rows else float(initial_capital)
 
-    txns = (
+    q = (
         sb.table("transactions")
         .select("action, weight_in, weight_out, price_in, price_out, entry_price_out")
         .eq("portfolio_id", portfolio_id)
-        .eq("date", today_str)
-        .execute()
-        .data
     )
+    if rows:
+        q = q.gt("date", rows[0]["date"]).lte("date", today_str)
+    else:
+        q = q.eq("date", today_str)
+    txns = q.execute().data
     delta = 0.0
     for t in txns:
         action = (t.get("action") or "").upper()

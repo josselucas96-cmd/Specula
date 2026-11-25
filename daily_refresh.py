@@ -223,7 +223,12 @@ def derive_cash_at_date(sb, portfolio_id: str, target_date_str: str,
     """Derive cash $ at end of target_date_str, replicating get_cash_amount logic.
 
     1. Baseline = latest CASH row strictly before target_date_str (or initial_capital)
-    2. + Σ same-day transaction $-deltas
+    2. + Σ $-deltas of every transaction dated AFTER that row, up to target_date
+
+    Step 2 used to look at target_date only. When the day of a move has no row
+    (2026-11-17: the jump guard blocked Le Visionnaire for three days), the next
+    row then started from pre-move cash and never saw the trades: $27,749 of
+    phantom cash in the NAV from 2026-11-19 on.
     """
     rows = (
         sb.table("daily_holdings")
@@ -238,14 +243,16 @@ def derive_cash_at_date(sb, portfolio_id: str, target_date_str: str,
     )
     baseline = float(rows[0]["value"]) if rows else float(initial_capital)
 
-    txns = (
+    q = (
         sb.table("transactions")
         .select("action, weight_in, weight_out, price_out, entry_price_out")
         .eq("portfolio_id", portfolio_id)
-        .eq("date", target_date_str)
-        .execute()
-        .data
     )
+    if rows:
+        q = q.gt("date", rows[0]["date"]).lte("date", target_date_str)
+    else:
+        q = q.eq("date", target_date_str)
+    txns = q.execute().data
     delta = 0.0
     for t in txns:
         a = (t.get("action") or "").upper()
@@ -287,6 +294,7 @@ class SuspiciousValueJump(Exception):
 
 
 ALLOW_JUMPS = False       # set by --allow-jumps
+BACKFILL_ERRORS: list[str] = []   # a hole that could not be filled fails the run (see main)
 JUMP_RATIO = 2.5          # value_new / value_prev outside [1/2.5, 2.5] → suspicious
 JUMP_MIN_USD = 5_000.0    # ignore tiny positions where ratios are noisy
 
@@ -411,6 +419,32 @@ def apply_split_db(sb, portfolio_id: str, ticker: str, ratio: float, split_date:
     return True
 
 
+def is_suspicious_jump(prev_value: float, value: float,
+                       prev_price: float | None, price: float) -> bool:
+    """True when a position's value jumped by more than JUMP_RATIO AND so did its
+    price. A split the book does not know about (or a wrong currency) moves
+    both. A reinforcement or a trim moves the value only: Bitmine went from
+    1.5% to 4% of Le Visionnaire on 2026-11-17 (x2.58) and the value-only test
+    took it for a split and blocked the whole portfolio for three nights.
+    Without a previous price the value alone decides (the strict side)."""
+    def out(ratio):
+        return ratio > JUMP_RATIO or ratio < 1.0 / JUMP_RATIO
+    if not prev_value or prev_value < JUMP_MIN_USD or not out(value / prev_value):
+        return False
+    return out(price / prev_price) if prev_price else True
+
+
+def _previous_prices(sb, portfolio_id: str, target_date_str: str) -> dict:
+    """{ticker: price} of the latest stored row strictly before target_date."""
+    last = (sb.table("daily_holdings").select("date").eq("portfolio_id", portfolio_id)
+            .lt("date", target_date_str).order("date", desc=True).limit(1).execute().data)
+    if not last:
+        return {}
+    rows = (sb.table("daily_holdings").select("ticker, price").eq("portfolio_id", portfolio_id)
+            .eq("date", last[0]["date"]).execute().data)
+    return {r["ticker"]: float(r["price"]) for r in rows if r.get("price")}
+
+
 def _previous_values(sb, portfolio_id: str, target_date_str: str) -> dict:
     """{ticker: value} of the latest stored row strictly before target_date."""
     last = (
@@ -473,6 +507,7 @@ def refresh_portfolio(sb, portfolio_id: str, target_date_str: str) -> dict:
     ccy_map = _currency_map(sb, [p["ticker"] for p in positions if p.get("ticker")])
     fx = _fx_to_usd(ccy_map.values(), as_of=target_date_str)
     prev_values = _previous_values(sb, portfolio_id, target_date_str)
+    prev_prices = _previous_prices(sb, portfolio_id, target_date_str)
 
     rows = [{
         "portfolio_id": portfolio_id,
@@ -521,7 +556,7 @@ def refresh_portfolio(sb, portfolio_id: str, target_date_str: str) -> dict:
             if not prev or prev < JUMP_MIN_USD:
                 continue
             ratio = r["value"] / prev
-            if ratio > JUMP_RATIO or ratio < 1.0 / JUMP_RATIO:
+            if is_suspicious_jump(prev, r["value"], prev_prices.get(r["ticker"]), r["price"]):
                 # Is it a split the book does not know about yet? Yahoo restates
                 # prices on the split date, so value_new/value_prev ~= 1/split_ratio.
                 sp = detect_split(r["ticker"], target_date_str)
@@ -754,6 +789,7 @@ def backfill_recent_gaps(sb, portfolio_ids: list[str], target_date_str: str,
                 print(f"  [backfill] {pid} {d}: SKIPPED -- {e}", flush=True)
             except Exception as e:
                 print(f"  [backfill] {pid} {d}: ERROR {e}", flush=True)
+                BACKFILL_ERRORS.append(f"{pid} {d}: {e}")
     return healed
 
 
@@ -1129,7 +1165,7 @@ def main():
         healed = backfill_recent_gaps(sb, portfolio_ids, target, lookback_days=7)
         if healed:
             print(f"[daily_refresh] backfilled {len(healed)} missing (portfolio, date) rows.", flush=True)
-        else:
+        elif not BACKFILL_ERRORS:
             print(f"[daily_refresh] no gaps found.", flush=True)
 
         # Filling holes is not enough: a row written with the wrong session's
@@ -1199,8 +1235,13 @@ def main():
     fd_failed_suffix = f" ({fd_failed_n} failed)" if fd_failed_n else ""
     print(f"  fundamentals      {fd_result['ok']:3} tickers updated{fd_failed_suffix}")
 
+    # A day that could not be filled is a failure too. From 2026-11-20 to 25 the
+    # runs printed two backfill errors, then "no gaps found", and ended green.
+    for e in BACKFILL_ERRORS:
+        print(f"  backfill      ERROR: {e}")
+
     # Exit with non-zero if any portfolio failed
-    if any("error" in r for r in results):
+    if any("error" in r for r in results) or BACKFILL_ERRORS:
         sys.exit(1)
 
 

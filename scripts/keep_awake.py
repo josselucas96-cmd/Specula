@@ -10,8 +10,9 @@ visit (or a commit). A plain HTTP GET is not confirmed to count, so we open the
 landing page in headless Chromium (a genuine websocket session), and if the
 app is asleep we click the wake-up button ourselves.
 
-Scheduled every 6 hours by .github/workflows/keep-awake.yml — comfortably
-under the 12h threshold even when GitHub delays a cron run by a few hours.
+Scheduled every 2 hours by .github/workflows/keep-awake.yml. It was every 6
+hours until 2026-11-25, but GitHub runs only about half of the scheduled times
+(gaps of 16 to 18 hours were seen on 11 and 23 November), beyond the 12h limit.
 It does NOT write anything: daily_holdings is written by daily_refresh.py only.
 
 Exit code is non-zero when the page could not be reached at all, so the
@@ -30,32 +31,42 @@ APP_URL = os.environ.get("APP_URL", "https://specula-project.streamlit.app/")
 READY_JS = "() => /Specula/.test(document.body.innerText) && /(PORTFOLIO|Accueil|Page not found)/i.test(document.body.innerText)"
 
 
-def wait_until_rendered(page, timeout_ms: int) -> bool:
-    """On *.streamlit.app the app runs inside an iframe of a wrapper page, so
-    the top document never contains the app's text: poll EVERY frame."""
+def wait_until_rendered(page, timeout_ms: int = 90_000, wake_ms: int = 240_000) -> tuple[bool, bool]:
+    """(rendered, woke). On *.streamlit.app the app runs inside an iframe of a
+    wrapper page, so the top document never contains the app's text: poll EVERY
+    frame. The wake button is looked for on EVERY pass: the sleep page draws it
+    a moment after the document is loaded, and looking once, right after the
+    load, missed it every time (12 to 17 and 23 to 25 November 2026: the robot
+    stared at the button for 90 seconds and the app stayed asleep). A cold
+    start takes a minute or two, so a click extends the deadline."""
     import time
-    deadline = time.time() + timeout_ms / 1000
+    deadline, woke, last_click = time.time() + timeout_ms / 1000, False, 0.0
     while time.time() < deadline:
         for frame in page.frames:
             try:
                 if frame.evaluate(READY_JS):
-                    return True
+                    return True, woke
             except Exception:
                 pass
+        if time.time() - last_click > 45 and wake_if_asleep(page):
+            if not woke:
+                deadline = time.time() + wake_ms / 1000
+            woke, last_click = True, time.time()
         page.wait_for_timeout(2_000)
-    return False
+    return False, woke
 
 
 def wake_if_asleep(page) -> bool:
-    for label in ("Yes, get this app back up!", "get this app back up"):
-        try:
-            btn = page.get_by_role("button", name=label)
-            if btn.count() > 0 and btn.first.is_visible():
-                print("app was ASLEEP -> clicking the wake button", flush=True)
-                btn.first.click()
-                return True
-        except Exception:
-            continue
+    for frame in page.frames:
+        for label in ("Yes, get this app back up!", "get this app back up"):
+            try:
+                btn = frame.get_by_role("button", name=label)
+                if btn.count() > 0 and btn.first.is_visible():
+                    print("app was ASLEEP -> clicking the wake button", flush=True)
+                    btn.first.click()
+                    return True
+            except Exception:
+                continue
     return False
 
 
@@ -79,9 +90,8 @@ def main() -> int:
         page = browser.new_context(viewport={"width": 1280, "height": 900}).new_page()
         try:
             page.goto(APP_URL, timeout=120_000, wait_until="domcontentloaded")
-            woke = wake_if_asleep(page)
-            # A cold start after waking can take ~1-2 min; be patient.
-            if not wait_until_rendered(page, 180_000 if woke else 90_000):
+            rendered, woke = wait_until_rendered(page)
+            if not rendered:
                 raise TimeoutError("app content not found in any frame")
             page.wait_for_timeout(8_000)  # let the script run so the session counts as traffic
             title = page.title()

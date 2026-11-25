@@ -56,6 +56,52 @@ def check_holdings(sb, today=None):
             notes.append(f"{pid}: last row {last_date}")
 
 
+def cash_delta(t, initial_capital: float) -> float:
+    """$ effect of one transaction on cash (same arithmetic as the nightly job)."""
+    a = (t.get("action") or "").upper()
+    d = 0.0
+    if a in ("IN", "SWITCH"):
+        d -= float(t.get("weight_in") or 0) * initial_capital / 100.0
+    if a in ("TRIM", "OUT", "SWITCH"):
+        pru = float(t.get("entry_price_out") or 0)
+        if pru > 0:
+            d += float(t.get("weight_out") or 0) * initial_capital / 100.0 / pru * float(t.get("price_out") or 0)
+    return d
+
+
+def cash_breaks(cash: dict, txns: list, initial_capital: float, tol: float = 25.0) -> list[str]:
+    """Days where the ledger's cash did not move by the trades made since the
+    previous row. `cash` = {date: $}."""
+    out, days = [], sorted(cash)
+    for a, b in zip(days, days[1:]):
+        want = sum(cash_delta(t, initial_capital) for t in txns if a < str(t.get("date")) <= b)
+        got = cash[b] - cash[a]
+        if abs(got - want) > tol:
+            out.append(f"{b}: cash moved by ${got:,.0f}, trades since {a} say ${want:,.0f}")
+    return out
+
+
+def check_cash(sb, days: int = 15):
+    """The cash line must follow the trades. On 2026-11-19 it did not ($27,749
+    of phantom cash on Le Visionnaire) and no check looked at it."""
+    since = (datetime.now(timezone.utc).date() - timedelta(days=days)).isoformat()
+    for pid in [r["id"] for r in sb.table("portfolios").select("id").execute().data]:
+        cap = None
+        for key in (f"initial_capital_{pid}", "initial_capital"):
+            r = sb.table("settings").select("value").eq("key", key).execute().data
+            if r:
+                cap = float(r[0]["value"])
+                break
+        rows = (sb.table("daily_holdings").select("date,value").eq("portfolio_id", pid).eq("ticker", "CASH")
+                .gte("date", since).execute().data)
+        tx = (sb.table("transactions").select("date,action,weight_in,weight_out,price_out,entry_price_out")
+              .eq("portfolio_id", pid).gte("date", since).execute().data)
+        bad = cash_breaks({r["date"]: float(r["value"]) for r in rows}, tx, cap or 1_000_000.0)
+        problems.extend(f"{pid} {b}" for b in bad)
+        if not bad:
+            notes.append(f"{pid}: cash follows the trades over {days} days")
+
+
 def check_prices(sb):
     r = sb.table("current_prices").select("fetched_at").order("fetched_at", desc=True).limit(1).execute().data
     if not r:
@@ -244,6 +290,7 @@ def main() -> int:
     sb = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
     check_holdings(sb)
     check_prices(sb)
+    check_cash(sb)
     check_ledger_is_priced_on_its_own_day(sb)
     check_workflow()
     check_app()

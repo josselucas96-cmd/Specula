@@ -2,12 +2,14 @@ name: Keep app awake
 
 # Streamlit Community Cloud sleeps a public app after 12h without traffic and
 # then shows visitors a "get this app back up" page with a ~1 min cold start.
-# A real headless-browser visit every 6h keeps Specula awake (and wakes it if
+# A real headless-browser visit every 2h keeps Specula awake (and wakes it if
 # it dozed off). See scripts/keep_awake.py. Public repo => Actions minutes free.
 
 on:
   schedule:
-    - cron: '17 */6 * * *'   # 00:17, 06:17, 12:17, 18:17 UTC
+    # Every 2h: GitHub drops about half of the scheduled runs of this repo, and
+    # at every 6h that left gaps of 16-18h, past Streamlit's 12h limit.
+    - cron: '17 */2 * * *'
   workflow_dispatch:
     inputs:
       url:
@@ -17,7 +19,7 @@ on:
 
 concurrency:
   group: keep-awake
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   visit:
