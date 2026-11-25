@@ -4,6 +4,15 @@
 #         impact (what changed in published figures), status.
 
 [[entry]]
+date   = "2026-11-25"
+scope  = "Le Visionnaire"
+title  = "Cash spent on 17 November still counted from 19 to 24 November"
+what   = "On 17 November the position in Bitmine was raised from 1.5% to 4% of the portfolio. The safeguard that looks for unapplied stock splits took the rise in value for a split and blocked the nightly job, so no row was written for 17 and 18 November. When the job resumed, it started from the cash of 16 November and only looked at the trades of its own day. The $27,749 spent on 17 November therefore stayed in the cash line: $31,099 instead of $3,349. The runs reported success and no check compared the cash with the trades."
+fix    = "The rows of 17 and 18 November were written from their own closing prices and the cash line of 19 to 24 November was corrected, on 25 November. Share counts and prices were not changed. Cash now takes into account every trade since the previous row, the safeguard requires the price to jump as well as the value, a day that cannot be written fails the run, and a daily check compares the cash with the trades. Covered by regression tests. The whole history of the three portfolios was checked: this is the only case."
+impact = "Le Visionnaire was overstated by about 2.8 points from 19 to 24 November. Return since inception on 24 November: -7.30% (shown -4.52%). Low of 20 November: -12.87% (shown -10.09%). Maximum drawdown: -31.4% (shown -29.2%). Le Bâtisseur and Le Nakamoto are not affected, and no trade was made on the wrong figure."
+status = "closed"
+
+[[entry]]
 date   = "2026-11-10"
 scope  = "Le Bâtisseur"
 title  = "Boston Scientific: the durability of its competitive advantage was overestimated"
